@@ -577,8 +577,8 @@ class ColorButton(QtWidgets.QToolButton):
         name: str
             Widget name
         geometry: tuple
-            Color button position and width
-            (x, y, w) -> x, y: upper left corner, w: width
+            Color button position
+            (x, y) -> x, y: upper left corner
         color: str
             Color string
             Format: 'R, G, B'
@@ -695,7 +695,68 @@ class Switch(QtWidgets.QToolButton):
         if language == 0:   self.setText(self.label_es)
         elif language == 1: self.setText(self.label_en)
 
+# ----------
+# Text Field
+# ----------
+class TextField(QtWidgets.QFrame):
+    def __init__(self, parent, geometry: tuple, labels: tuple, theme: bool, language: int) -> None:
+        """ Material Design 3 Component: Text Field
 
+        Parameters
+        ----------
+        geometry: tuple
+            Text Field position and width
+            (x, y, w) -> x, y: upper left corner, w: width
+        labels: tuple
+            Text Field text
+            (label_es, label_en) -> label_es: label in spanish, label_en: label in english
+        theme: bool
+            App theme
+            True: Light theme, False: Dark theme
+        language: int
+            App language
+            0: Spanish, 1: English
+        
+        Returns
+        -------
+        None
+        """
+        super(TextField, self).__init__(parent)
+
+        self.label_es, self.label_en = labels
+        x, y, w = geometry
+
+        self.setGeometry(x, y, w, 52)
+
+        self.text_field = QtWidgets.QLineEdit(self)
+        self.text_field.setGeometry(0, 8, w, 44)
+        self.text_field.setClearButtonEnabled(True)
+
+        self.label_field = QtWidgets.QLabel(self)
+        self.label_field.setGeometry(8, 0, 16, 16)
+        self.label_field.setFont(QtGui.QFont('Segoe UI', 9))
+        
+        self.apply_styleSheet(theme)
+        self.language_text(language)
+
+    def apply_styleSheet(self, theme: bool) -> None:
+        """ Apply theme style sheet to component """
+        if theme:
+            background_color = light["surface"]
+            color = light["on_surface"]
+        else:
+            background_color = dark["surface"]
+            color = dark["on_surface"]
+        self.setStyleSheet(f'QLineEdit {{ border: 1px solid {color}; border-radius: 4;'
+                f'padding: 0 8 0 8; background-color: {background_color}; color: {color}; }}'
+                f'QLabel {{ border: 0px solid; padding: 0 4 0 4;'
+                f'background-color: {background_color}; color: {color} }}')
+
+    def language_text(self, language: int) -> None:
+        """ Change language of label text  """
+        if language == 0:   self.label_field.setText(self.label_es)
+        elif language == 1: self.label_field.setText(self.label_en)
+        self.label_field.adjustSize()
 
 
 
