@@ -73,3 +73,37 @@ class Card(QtWidgets.QFrame):
     def language_text(self, language):
         if language == 0:   self.title.setText(self.label_es)
         elif language == 1: self.title.setText(self.label_en)
+
+
+# ----------
+# Item Label
+# ----------
+class ItemLabel(QtWidgets.QLabel):
+    def __init__(self, parent, name, labels, geometry, theme, language):
+        super(ItemLabel, self).__init__(parent)
+
+        self.name = name
+        self.label_es, self.label_en = labels
+        x, y = geometry
+
+        self.setObjectName(self.name)
+        self.setGeometry(x, y, parent.geometry().width()-16, 20)
+        self.setFont(QtGui.QFont('Segoe UI', 9, QtGui.QFont.Weight.Bold))
+        
+        self.apply_styleSheet(theme)
+        self.language_text(language)
+    
+    def apply_styleSheet(self, theme):
+        if theme:
+            background_color = light["surface"]
+            color = light["on_surface"]
+        else:
+            background_color = dark["surface"]
+            color = dark["on_surface"]
+        style = (f'QLabel#{self.name} {{ background-color: {background_color};'
+                 f'color: {color} }}')
+        self.setStyleSheet(style)
+
+    def language_text(self, language):
+        if language == 0:   self.setText(self.label_es)
+        elif language == 1: self.setText(self.label_en)
