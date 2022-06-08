@@ -213,5 +213,44 @@ class FieldLabel(QtWidgets.QLabel):
         elif language == 1: self.setText(self.label_en)
         self.adjustSize()
 
+# -----------
+# Text Button
+# -----------
+class TextButton(QtWidgets.QToolButton):
+    def __init__(self, parent, name, geometry, labels, icon, theme, language):
+        super(TextButton, self).__init__(parent)
 
+        self.name = name
+        self.label_es, self.label_en = labels
+        x, y, w = geometry
+
+        self.setObjectName(self.name)
+        self.setGeometry(x, y, w, 32)
+        self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.setAutoRaise(True)
+        self.setIcon(QtGui.QIcon(f'{images_path}/{icon}'))
+
+        self.apply_styleSheet(theme)
+        self.language_text(language)
+        
+    def apply_styleSheet(self, theme):
+        if theme:
+            background_color = light["primary"]
+            color = light["on_primary"]
+            hover_background_color = light["secondary"]
+            hover_color = light["on_secondary"]
+        else:
+            background_color = dark["primary"]
+            color = dark["on_primary"]
+            hover_background_color = dark["secondary"]
+            hover_color = dark["on_secondary"]
+        self.setStyleSheet(f'QToolButton#{self.name} {{ border: 0px solid; border-radius: 16;'
+                f'padding: 0 8 0 8; background-color: {background_color};'
+                f'color: {color} }}'
+                f'QToolButton#{self.name}:hover {{ background-color: {hover_background_color};'
+                f'color: {hover_color} }}')
+
+    def language_text(self, language):
+        if language == 0:   self.setText(self.label_es)
+        elif language == 1: self.setText(self.label_en)
 
