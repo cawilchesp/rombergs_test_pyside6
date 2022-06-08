@@ -42,9 +42,32 @@ images_path = f'{current_path}/images'
 # Card
 # ----
 class Card(QtWidgets.QFrame):
-    def __init__(self, parent, name, geometry, labels, theme, language):
-        super(Card, self).__init__(parent)
+    def __init__(self, parent, name: str, geometry: tuple, labels: tuple, theme: bool, language: int) -> None:
+        """ Material Design 3 Component: Card
+
+        Parameters
+        ----------
+        name: str
+            Widget name
+        geometry: tuple
+            Card position and size
+            (x, y, w, h) -> x, y: upper left corner, w: width, h: height
+        labels: tuple
+            Card title text
+            (label_es, label_en) -> label_es: label in spanish, label_en: label in english
+        theme: bool
+            App theme
+            True: Light theme, False: Dark theme
+        language: int
+            App language
+            0: Spanish, 1: English
         
+        Returns
+        -------
+        None
+        """
+        super(Card, self).__init__(parent)
+
         self.name = name
         self.label_es, self.label_en = labels
         x, y, w, h = geometry
@@ -59,7 +82,8 @@ class Card(QtWidgets.QFrame):
         self.apply_styleSheet(theme)
         self.language_text(language)
     
-    def apply_styleSheet(self, theme):
+    def apply_styleSheet(self, theme: bool) -> None:
+        """ Apply theme style sheet to component """
         if theme:
             background_color = light["surface"]
             color = light["on_surface"]
@@ -70,7 +94,8 @@ class Card(QtWidgets.QFrame):
                 f'background-color: {background_color} }}'
                 f'QLabel {{ background-color: {background_color}; color: {color} }}')
 
-    def language_text(self, language):
+    def language_text(self, language: int) -> None:
+        """ Change language of title text  """
         if language == 0:   self.title.setText(self.label_es)
         elif language == 1: self.title.setText(self.label_en)
 
@@ -78,7 +103,30 @@ class Card(QtWidgets.QFrame):
 # Item Label
 # ----------
 class ItemLabel(QtWidgets.QLabel):
-    def __init__(self, parent, name, labels, geometry, theme, language):
+    def __init__(self, parent, name: str, geometry: tuple, labels: tuple, theme: bool, language: int) -> None:
+        """ Material Design 3 Component: Item Label
+
+        Parameters
+        ----------
+        name: str
+            Widget name
+        geometry: tuple
+            Item label position
+            (x, y) -> x, y: upper left corner
+        labels: tuple
+            Item label text
+            (label_es, label_en) -> label_es: label in spanish, label_en: label in english
+        theme: bool
+            App theme
+            True: Light theme, False: Dark theme
+        language: int
+            App language
+            0: Spanish, 1: English
+        
+        Returns
+        -------
+        None
+        """
         super(ItemLabel, self).__init__(parent)
 
         self.name = name
@@ -92,7 +140,8 @@ class ItemLabel(QtWidgets.QLabel):
         self.apply_styleSheet(theme)
         self.language_text(language)
     
-    def apply_styleSheet(self, theme):
+    def apply_styleSheet(self, theme: bool) -> None:
+        """ Apply theme style sheet to component """
         if theme:
             background_color = light["surface"]
             color = light["on_surface"]
@@ -102,7 +151,8 @@ class ItemLabel(QtWidgets.QLabel):
         self.setStyleSheet(f'QLabel#{self.name} {{ background-color: {background_color};'
                 f'color: {color} }}')
 
-    def language_text(self, language):
+    def language_text(self, language: int) -> None:
+        """ Change language of label text  """
         if language == 0:   self.setText(self.label_es)
         elif language == 1: self.setText(self.label_en)
 
@@ -110,7 +160,24 @@ class ItemLabel(QtWidgets.QLabel):
 # Value Label
 # -----------
 class ValueLabel(QtWidgets.QLabel):
-    def __init__(self, parent, name, geometry, theme):
+    def __init__(self, parent, name: str, geometry: tuple, theme: bool) -> None:
+        """ Material Design 3 Component: Value Label
+
+        Parameters
+        ----------
+        name: str
+            Widget name
+        geometry: tuple
+            Value label position
+            (x, y) -> x, y: upper left corner
+        theme: bool
+            App theme
+            True: Light theme, False: Dark theme
+        
+        Returns
+        -------
+        None
+        """
         super(ValueLabel, self).__init__(parent)
 
         self.name = name
@@ -121,7 +188,8 @@ class ValueLabel(QtWidgets.QLabel):
         
         self.apply_styleSheet(theme)
     
-    def apply_styleSheet(self, theme):
+    def apply_styleSheet(self, theme: bool) -> None:
+        """ Apply theme style sheet to component """
         if theme:
             background_color = light["surface"]
             color = light["on_surface"]
@@ -135,7 +203,26 @@ class ValueLabel(QtWidgets.QLabel):
 # Icon Label
 # ----------
 class IconLabel(QtWidgets.QLabel):
-    def __init__(self, parent, name, geometry, icon, theme):
+    def __init__(self, parent, name: str, geometry: tuple, icon: str, theme: bool) -> None:
+        """ Material Design 3 Component: Icon Label
+
+        Parameters
+        ----------
+        name: str
+            Widget name
+        geometry: tuple
+            Icon label position
+            (x, y) -> x, y: upper left corner
+        icon: str
+            Icon file without extension, for the theme
+        theme: bool
+            App theme
+            True: Light theme, False: Dark theme
+        
+        Returns
+        -------
+        None
+        """
         super(IconLabel, self).__init__(parent)
 
         self.name = name
@@ -148,11 +235,13 @@ class IconLabel(QtWidgets.QLabel):
         self.set_icon(icon, theme)
         self.apply_styleSheet(theme)
 
-    def set_icon(self, icon, theme):
+    def set_icon(self, icon: str, theme: bool) -> None:
+        """ Apply icon corresponding to the theme """
         if theme: self.setPixmap(QtGui.QIcon(f'{images_path}/{icon}_L.png').pixmap(24))
         else: self.setPixmap(QtGui.QIcon(f'{images_path}/{icon}_D.png').pixmap(24))
 
-    def apply_styleSheet(self, theme):
+    def apply_styleSheet(self, theme: bool) -> None:
+        """ Apply theme style sheet to component """
         if theme:
             background_color = light["surface"]
             color = light["on_surface"]
@@ -166,7 +255,24 @@ class IconLabel(QtWidgets.QLabel):
 # Color Label
 # -----------
 class ColorLabel(QtWidgets.QLabel):
-    def __init__(self, parent, name, geometry, color):
+    def __init__(self, parent, name: str, geometry: tuple, color: str) -> None:
+        """ Material Design 3 Component: Icon Label
+
+        Parameters
+        ----------
+        name: str
+            Widget name
+        geometry: tuple
+            Color label position
+            (x, y) -> x, y: upper left corner
+        color: str
+            Color string
+            Format: 'R, G, B'
+        
+        Returns
+        -------
+        None
+        """
         super(ColorLabel, self).__init__(parent)
 
         self.name = name
@@ -176,7 +282,8 @@ class ColorLabel(QtWidgets.QLabel):
         self.setGeometry(x, y, 32, 32)
         self.set_color(color)
 
-    def set_color(self, color):
+    def set_color(self, color: str) -> None:
+        """ Apply custom color to component """
         self.setStyleSheet(f'QLabel#{self.name} {{ border: 2px solid {light["secondary"]};'
             f'border-radius: 15px; background-color: rgb({color}) }}')
 
@@ -184,7 +291,30 @@ class ColorLabel(QtWidgets.QLabel):
 # Field Label
 # -----------
 class FieldLabel(QtWidgets.QLabel):
-    def __init__(self, parent, name, geometry, labels, theme, language):
+    def __init__(self, parent, name: str, geometry: tuple, labels: tuple, theme: bool, language: int) -> None:
+        """ Material Design 3 Component: Field Label
+
+        Parameters
+        ----------
+        name: str
+            Widget name
+        geometry: tuple
+            Field label position
+            (x, y) -> x, y: upper left corner
+        labels: tuple
+            Field label text
+            (label_es, label_en) -> label_es: label in spanish, label_en: label in english
+        theme: bool
+            App theme
+            True: Light theme, False: Dark theme
+        language: int
+            App language
+            0: Spanish, 1: English
+        
+        Returns
+        -------
+        None
+        """
         super(FieldLabel, self).__init__(parent)
 
         self.name = name
@@ -197,7 +327,8 @@ class FieldLabel(QtWidgets.QLabel):
         self.apply_styleSheet(theme)
         self.language_text(language)
     
-    def apply_styleSheet(self, theme):
+    def apply_styleSheet(self, theme: bool) -> None:
+        """ Apply theme style sheet to component """
         if theme:
             background_color = light["surface"]
             color = light["on_surface"]
@@ -208,7 +339,8 @@ class FieldLabel(QtWidgets.QLabel):
                 f'background-color: {background_color};'
                 f'color: {color} }}')
 
-    def language_text(self, language):
+    def language_text(self, language: int) -> None:
+        """ Change language of label text  """
         if language == 0:   self.setText(self.label_es)
         elif language == 1: self.setText(self.label_en)
         self.adjustSize()
@@ -217,7 +349,32 @@ class FieldLabel(QtWidgets.QLabel):
 # Text Button
 # -----------
 class TextButton(QtWidgets.QToolButton):
-    def __init__(self, parent, name, geometry, labels, icon, theme, language):
+    def __init__(self, parent, name: str, geometry: tuple, labels: tuple, icon: str, theme: bool, language: int) -> None:
+        """ Material Design 3 Component: Text Button
+
+        Parameters
+        ----------
+        name: str
+            Widget name
+        geometry: tuple
+            Text button position
+            (x, y, w) -> x, y: upper left corner, w: width
+        labels: tuple
+            Text button text
+            (label_es, label_en) -> label_es: label in spanish, label_en: label in english
+        icon: str
+            Icon file with extension. If is not necessary, leave empty ('').
+        theme: bool
+            App theme
+            True: Light theme, False: Dark theme
+        language: int
+            App language
+            0: Spanish, 1: English
+        
+        Returns
+        -------
+        None
+        """
         super(TextButton, self).__init__(parent)
 
         self.name = name
@@ -233,7 +390,8 @@ class TextButton(QtWidgets.QToolButton):
         self.apply_styleSheet(theme)
         self.language_text(language)
         
-    def apply_styleSheet(self, theme):
+    def apply_styleSheet(self, theme: bool) -> None:
+        """ Apply theme style sheet to component """
         if theme:
             background_color = light["primary"]
             color = light["on_primary"]
@@ -250,7 +408,8 @@ class TextButton(QtWidgets.QToolButton):
                 f'QToolButton#{self.name}:hover {{ background-color: {hover_background_color};'
                 f'color: {hover_color} }}')
 
-    def language_text(self, language):
+    def language_text(self, language: int) -> None:
+        """ Change language of button text  """
         if language == 0:   self.setText(self.label_es)
         elif language == 1: self.setText(self.label_en)
 
@@ -258,7 +417,39 @@ class TextButton(QtWidgets.QToolButton):
 # Segmented Button
 # ----------------
 class SegmentedButton(QtWidgets.QToolButton):
-    def __init__(self, parent, name, geometry, labels, icons, position, state, theme, language):
+    def __init__(self, parent, name: str, geometry: tuple, labels: tuple, icons: tuple, position: str, state: bool, theme: bool, language: int) -> None:
+        """ Material Design 3 Component: Segmented Button
+
+        Parameters
+        ----------
+        name: str
+            Widget name
+        geometry: tuple
+            Segmented button position
+            (x, y, w) -> x, y: upper left corner, w: width
+        labels: tuple
+            Segmented button text
+            (label_es, label_en) -> label_es: label in spanish, label_en: label in english
+        icons: tuple
+            Icon files with extension. Off state icon is a blank icon.
+            (icon_on, icon_off) -> icon_on: On state icon, icon_off: Off state icon
+        position: str
+            Position of the segmented button in the group
+            Options: 'left', 'center', 'right'
+        state: bool
+            State of activation
+            True: On, False: Off
+        theme: bool
+            App theme
+            True: Light theme, False: Dark theme
+        language: int
+            App language
+            0: Spanish, 1: English
+        
+        Returns
+        -------
+        None
+        """
         super(SegmentedButton, self).__init__(parent)
 
         self.name = name
@@ -277,7 +468,8 @@ class SegmentedButton(QtWidgets.QToolButton):
         self.apply_styleSheet(theme)
         self.language_text(language)
         
-    def set_state(self, state):
+    def set_state(self, state: bool) -> None:
+        """ Set button state and corresponding icon """
         if state:
             self.setIcon(QtGui.QIcon(f'{images_path}/{self.icon_on}'))
             self.setChecked(True)
@@ -285,7 +477,8 @@ class SegmentedButton(QtWidgets.QToolButton):
             self.setIcon(QtGui.QIcon(f'{images_path}/{self.icon_off}'))
             self.setChecked(False)
 
-    def apply_styleSheet(self, theme):
+    def apply_styleSheet(self, theme: bool) -> None:
+        """ Apply theme style sheet to component """
         if self.position == 'left':
             border_position = 'border-top-left-radius: 16; border-bottom-left-radius: 16'
         elif self.position == 'center':
@@ -311,6 +504,7 @@ class SegmentedButton(QtWidgets.QToolButton):
                 f'QToolButton#{self.name}:checked {{ background-color: {checked_background_color};'
                 f'color: {checked_color} }}')
 
-    def language_text(self, language):
+    def language_text(self, language: int) -> None:
+        """ Change language of button text  """
         if language == 0:   self.setText(self.label_es)
         elif language == 1: self.setText(self.label_en)
