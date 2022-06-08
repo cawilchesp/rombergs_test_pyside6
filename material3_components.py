@@ -521,7 +521,7 @@ class IconButton(QtWidgets.QToolButton):
         name: str
             Widget name
         geometry: tuple
-            Segmented button position
+            Icon button position
             (x, y, w) -> x, y: upper left corner, w: width
         icon: tuple
             Icon file with extension.
@@ -564,4 +564,63 @@ class IconButton(QtWidgets.QToolButton):
                 f'background-color: {background_color}; color: {color} }}'
                 f'QToolButton#{self.name}:hover {{ border: 0px solid; border-radius: 16;'
                 f'background-color: {hover_background_color}; color: {hover_color} }}')
+
+# ------------
+# Color Button
+# ------------
+class ColorButton(QtWidgets.QToolButton):
+    def __init__(self, parent, name: str, geometry: tuple, color: str, theme: bool) -> None:
+        """ Material Design 3 Component: Color Button
+
+        Parameters
+        ----------
+        name: str
+            Widget name
+        geometry: tuple
+            Color button position and width
+            (x, y, w) -> x, y: upper left corner, w: width
+        color: str
+            Color string
+            Format: 'R, G, B'
+        theme: bool
+            App theme
+            True: Light theme, False: Dark theme
+        
+        Returns
+        -------
+        None
+        """
+        super(ColorButton, self).__init__(parent)
+
+        self.name = name
+        x, y = geometry
+
+        self.setObjectName(self.name)
+        self.setGeometry(x, y, 32, 32)
+        self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.setAutoRaise(True)
+        self.setEnabled(True)
+
+        self.apply_styleSheet(theme, color)
+
+    def apply_styleSheet(self, theme: bool, color: str) -> None:
+        """ Apply theme style sheet and color to component """
+        if theme:
+            hover_border_color = light["secondary"]
+        else:
+            hover_border_color = dark["secondary"]
+        self.setStyleSheet(f'QToolButton#{self.name} {{ border: 0px solid;'
+                f'border-radius: 16; background-color: rgb({color}) }}'
+                f'QToolButton#{self.name}:hover {{ border: 2px solid;'
+                f'border-radius: 16; border-color: {hover_border_color} }}')
+
+
+
+
+
+
+
+
+
+
 
