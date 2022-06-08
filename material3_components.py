@@ -65,15 +65,13 @@ class Card(QtWidgets.QFrame):
         else:
             background_color = dark["surface"]
             color = dark["on_surface"]
-        style = (f'QFrame#{self.name} {{ border-radius: 16px;'
+        self.setStyleSheet(f'QFrame#{self.name} {{ border-radius: 16px;'
                  f'background-color: {background_color} }}'
                  f'QLabel {{ background-color: {background_color}; color: {color} }}')
-        self.setStyleSheet(style)
 
     def language_text(self, language):
         if language == 0:   self.title.setText(self.label_es)
         elif language == 1: self.title.setText(self.label_en)
-
 
 # ----------
 # Item Label
@@ -100,10 +98,34 @@ class ItemLabel(QtWidgets.QLabel):
         else:
             background_color = dark["surface"]
             color = dark["on_surface"]
-        style = (f'QLabel#{self.name} {{ background-color: {background_color};'
+        self.setStyleSheet(f'QLabel#{self.name} {{ background-color: {background_color};'
                  f'color: {color} }}')
-        self.setStyleSheet(style)
 
     def language_text(self, language):
         if language == 0:   self.setText(self.label_es)
         elif language == 1: self.setText(self.label_en)
+
+# -----------
+# Value Label
+# -----------
+class ValueLabel(QtWidgets.QLabel):
+    def __init__(self, parent, name, geometry, theme):
+        super(ValueLabel, self).__init__(parent)
+
+        self.name = name
+        x, y, w = geometry
+
+        self.setObjectName(self.name)
+        self.setGeometry(x, y, w, 32)
+        
+        self.apply_styleSheet(theme)
+    
+    def apply_styleSheet(self, theme):
+        if theme:
+            background_color = light["surface"]
+            color = light["on_surface"]
+        else:
+            background_color = dark["surface"]
+            color = dark["on_surface"]
+        self.setStyleSheet(f'QLabel#{self.name} {{ background-color: {background_color};'
+                 f'color: {color} }}')
