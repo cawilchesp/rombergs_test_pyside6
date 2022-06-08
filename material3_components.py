@@ -157,8 +157,8 @@ class IconLabel(QtWidgets.QLabel):
             background_color = light["surface"]
             color = light["on_surface"]
         else:
-            background_color = light["surface"]
-            color = light["on_surface"]
+            background_color = dark["surface"]
+            color = dark["on_surface"]
         self.setStyleSheet(f'QLabel#{self.name} {{ background-color: {background_color};'
                 f'color: {color} }}')
 
@@ -254,3 +254,63 @@ class TextButton(QtWidgets.QToolButton):
         if language == 0:   self.setText(self.label_es)
         elif language == 1: self.setText(self.label_en)
 
+# ----------------
+# Segmented Button
+# ----------------
+class SegmentedButton(QtWidgets.QToolButton):
+    def __init__(self, parent, name, geometry, labels, icons, position, state, theme, language):
+        super(SegmentedButton, self).__init__(parent)
+
+        self.name = name
+        self.label_es, self.label_en = labels
+        self.icon_on, self.icon_off = icons
+        self.position = position
+        x, y, w = geometry
+
+        self.setObjectName(self.name)
+        self.setGeometry(x, y, w, 32)
+        self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.setCheckable(True)
+        self.setEnabled(True)
+
+        self.set_state(state)
+        self.apply_styleSheet(theme)
+        self.language_text(language)
+        
+    def set_state(self, state):
+        if state:
+            self.setIcon(QtGui.QIcon(f'{images_path}/{self.icon_on}'))
+            self.setChecked(True)
+        else:
+            self.setIcon(QtGui.QIcon(f'{images_path}/{self.icon_off}'))
+            self.setChecked(False)
+
+    def apply_styleSheet(self, theme):
+        if self.position == 'left':
+            border_position = 'border-top-left-radius: 16; border-bottom-left-radius: 16'
+        elif self.position == 'center':
+            border_position = 'border-radius: 0'
+        elif self.position == 'right':
+            border_position = 'border-top-right-radius: 16; border-bottom-right-radius: 16'
+        
+        if theme:
+            border_color = light["on_surface"]
+            background_color = light["primary"]
+            color = light["on_primary"]
+            checked_background_color = light["secondary"]
+            checked_color = light["on_secondary"]
+        else:
+            border_color = dark["on_surface"]
+            background_color = dark["primary"]
+            color = dark["on_primary"]
+            checked_background_color = dark["secondary"]
+            checked_color = dark["on_secondary"]
+        self.setStyleSheet(f'QToolButton#{self.name} {{ border: 1px solid {border_color};'
+                f'{border_position}; padding: 0 8 0 8;'
+                f'background-color: {background_color}; color: {color} }}'
+                f'QToolButton#{self.name}:checked {{ background-color: {checked_background_color};'
+                f'color: {checked_color} }}')
+
+    def language_text(self, language):
+        if language == 0:   self.setText(self.label_es)
+        elif language == 1: self.setText(self.label_en)
