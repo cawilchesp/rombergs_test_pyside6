@@ -614,7 +614,86 @@ class ColorButton(QtWidgets.QToolButton):
                 f'QToolButton#{self.name}:hover {{ border: 2px solid;'
                 f'border-radius: 16; border-color: {hover_border_color} }}')
 
+# ------
+# Switch
+# ------
+class Switch(QtWidgets.QToolButton):
+    def __init__(self, parent, name: str, geometry: tuple, labels: tuple, icons: tuple, state: bool, theme: bool, language: int) -> None:
+        """ Material Design 3 Component: Switch
 
+        Parameters
+        ----------
+        name: str
+            Widget name
+        geometry: tuple
+            Switch position and width
+            (x, y, w) -> x, y: upper left corner, w: width
+        labels: tuple
+            Switch text. If is not necessary, use an empty tuple: ('','')
+            (label_es, label_en) -> label_es: label in spanish, label_en: label in english
+        icons: tuple
+            Icon files with extension.
+            (icon_on, icon_off) -> icon_on: On state icon, icon_off: Off state icon
+        state: bool
+            State of activation
+            True: On, False: Off
+        theme: bool
+            App theme
+            True: Light theme, False: Dark theme
+        language: int
+            App language
+            0: Spanish, 1: English
+        
+        Returns
+        -------
+        None
+        """
+        super(Switch, self).__init__(parent)
+
+        self.name = name
+        self.label_es, self.label_en = labels
+        self.icon_on, self.icon_off = icons
+        x, y, w = geometry
+
+        self.setObjectName(self.name)
+        self.setGeometry(x, y, w, 32)
+        self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.setCheckable(True)
+        
+        self.set_state(state)
+        self.apply_styleSheet(theme)
+        self.language_text(language)
+        
+    def set_state(self, state: bool) -> None:
+        """ Set button state and corresponding icon """
+        if state:
+            self.setIcon(QtGui.QIcon(f'{images_path}/{self.icon_on}'))
+            self.setChecked(True)
+        else:
+            self.setIcon(QtGui.QIcon(f'{images_path}/{self.icon_off}'))
+            self.setChecked(False)
+
+    def apply_styleSheet(self, theme: bool) -> None:
+        """ Apply theme style sheet to component """
+        if theme:
+            background_color = light["primary"]
+            color = light["on_primary"]
+            checked_background_color = light["secondary"]
+            checked_color = light["on_secondary"]
+        else:
+            background_color = dark["primary"]
+            color = dark["on_primary"]
+            checked_background_color = dark["secondary"]
+            checked_color = dark["on_secondary"]
+        self.setStyleSheet(f'QToolButton#{self.name} {{ border: 0px solid; border-radius: 16;'
+                f'padding: 0 16 0 16; background-color: {background_color}; color: {color} }}'
+                f'QToolButton#{self.name}:checked {{ background-color: {checked_background_color};'
+                f'color: {checked_color} }}')
+
+    def language_text(self, language: int) -> None:
+        """ Change language of switch text  """
+        if language == 0:   self.setText(self.label_es)
+        elif language == 1: self.setText(self.label_en)
 
 
 
