@@ -35,7 +35,8 @@ dark = {
     'error': ''
 }
 
-current_path = sys.path[0].replace('\\','/')
+current_path = sys.path[0].replace("\\","/")
+images_path = f'{current_path}/images'
 
 # ----
 # Card
@@ -66,8 +67,8 @@ class Card(QtWidgets.QFrame):
             background_color = dark["surface"]
             color = dark["on_surface"]
         self.setStyleSheet(f'QFrame#{self.name} {{ border-radius: 16px;'
-                 f'background-color: {background_color} }}'
-                 f'QLabel {{ background-color: {background_color}; color: {color} }}')
+                f'background-color: {background_color} }}'
+                f'QLabel {{ background-color: {background_color}; color: {color} }}')
 
     def language_text(self, language):
         if language == 0:   self.title.setText(self.label_es)
@@ -99,7 +100,7 @@ class ItemLabel(QtWidgets.QLabel):
             background_color = dark["surface"]
             color = dark["on_surface"]
         self.setStyleSheet(f'QLabel#{self.name} {{ background-color: {background_color};'
-                 f'color: {color} }}')
+                f'color: {color} }}')
 
     def language_text(self, language):
         if language == 0:   self.setText(self.label_es)
@@ -128,4 +129,89 @@ class ValueLabel(QtWidgets.QLabel):
             background_color = dark["surface"]
             color = dark["on_surface"]
         self.setStyleSheet(f'QLabel#{self.name} {{ background-color: {background_color};'
-                 f'color: {color} }}')
+                f'color: {color} }}')
+
+# ----------
+# Icon Label
+# ----------
+class IconLabel(QtWidgets.QLabel):
+    def __init__(self, parent, name, geometry, icon, theme):
+        super(IconLabel, self).__init__(parent)
+
+        self.name = name
+        x, y = geometry
+
+        self.setObjectName(self.name)
+        self.setGeometry(x, y, 32, 32)
+        self.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.set_icon(icon, theme)
+        self.apply_styleSheet(theme)
+
+    def set_icon(self, icon, theme):
+        if theme: self.setPixmap(QtGui.QIcon(f'{images_path}/{icon}_L.png').pixmap(24))
+        else: self.setPixmap(QtGui.QIcon(f'{images_path}/{icon}_D.png').pixmap(24))
+
+    def apply_styleSheet(self, theme):
+        if theme:
+            background_color = light["surface"]
+            color = light["on_surface"]
+        else:
+            background_color = light["surface"]
+            color = light["on_surface"]
+        self.setStyleSheet(f'QLabel#{self.name} {{ background-color: {background_color};'
+                f'color: {color} }}')
+
+# -----------
+# Color Label
+# -----------
+class ColorLabel(QtWidgets.QLabel):
+    def __init__(self, parent, name, geometry, color):
+        super(ColorLabel, self).__init__(parent)
+
+        self.name = name
+        x, y = geometry
+
+        self.setObjectName(self.name)
+        self.setGeometry(x, y, 32, 32)
+        self.set_color(color)
+
+    def set_color(self, color):
+        self.setStyleSheet(f'QLabel#{self.name} {{ border: 2px solid {light["secondary"]};'
+            f'border-radius: 15px; background-color: rgb({color}) }}')
+
+# -----------
+# Field Label
+# -----------
+class FieldLabel(QtWidgets.QLabel):
+    def __init__(self, parent, name, geometry, labels, theme, language):
+        super(FieldLabel, self).__init__(parent)
+
+        self.name = name
+        self.label_es, self.label_en = labels
+        x, y = geometry
+
+        self.setObjectName(self.name)
+        self.setGeometry(x, y, 16, 16)
+
+        self.apply_styleSheet(theme)
+        self.language_text(language)
+    
+    def apply_styleSheet(self, theme):
+        if theme:
+            background_color = light["surface"]
+            color = light["on_surface"]
+        else:
+            background_color = dark["surface"]
+            color = dark["on_surface"]
+        self.setStyleSheet(f'QLabel#{self.name} {{ border: 0px solid;'
+                f'background-color: {background_color};'
+                f'color: {color} }}')
+
+    def language_text(self, language):
+        if language == 0:   self.setText(self.label_es)
+        elif language == 1: self.setText(self.label_en)
+        self.adjustSize()
+
+
+
