@@ -41,40 +41,35 @@ current_path = sys.path[0].replace('\\','/')
 # Card
 # ----
 class Card(QtWidgets.QFrame):
-    def __init__(self, parent, object_name, geometry, labels, style, language):
+    def __init__(self, parent, name, geometry, labels, theme, language):
         super(Card, self).__init__(parent)
         
-        self.object_name = object_name
-        self.text_es, self.text_en = labels
+        self.name = name
+        self.label_es, self.label_en = labels
         x, y, w, h = geometry
 
-        self.setObjectName(self.object_name)
+        self.setObjectName(self.name)
         self.setGeometry(x, y, w, h)
 
         self.title = QtWidgets.QLabel(self)
         self.title.setGeometry(8, 8, w-16, 32)
         self.title.setFont(QtGui.QFont('Segoe UI', 14))
 
-        self.apply_styleSheet(style)
+        self.apply_styleSheet(theme)
         self.language_text(language)
     
-    def apply_styleSheet(self, style):
-        if style:
-            card_style = (f'QFrame {{ border-radius: 16px;'
-                f'background-color: {light["surface"]} }}'
-                f'QLabel {{ '
-                f'background-color: {light["surface"]};'
-                f'color: {light["on_surface"]} }}')
+    def apply_styleSheet(self, theme):
+        if theme:
+            background_color = light["surface"]
+            color = light["on_surface"]
         else:
-            card_style = (f'QFrame {{ border-radius: 16px;'
-                f'background-color: {dark["surface"]} }}'
-                f'QLabel {{ '
-                f'background-color: {dark["surface"]};'
-                f'color: {dark["on_surface"]} }}')
-        self.setStyleSheet(card_style)
+            background_color = dark["surface"]
+            color = dark["on_surface"]
+        style = (f'QFrame#{self.name} {{ border-radius: 16px;'
+                 f'background-color: {background_color} }}'
+                 f'QLabel {{ background-color: {background_color}; color: {color} }}')
+        self.setStyleSheet(style)
 
     def language_text(self, language):
-        if language == 0:
-            self.title.setText(self.text_es)
-        elif language == 1:
-            self.title.setText(self.text_en)
+        if language == 0:   self.title.setText(self.label_es)
+        elif language == 1: self.title.setText(self.label_en)
