@@ -357,7 +357,7 @@ class TextButton(QtWidgets.QToolButton):
         name: str
             Widget name
         geometry: tuple
-            Text button position
+            Text button position and width
             (x, y, w) -> x, y: upper left corner, w: width
         labels: tuple
             Text button text
@@ -425,7 +425,7 @@ class SegmentedButton(QtWidgets.QToolButton):
         name: str
             Widget name
         geometry: tuple
-            Segmented button position
+            Segmented button position and width
             (x, y, w) -> x, y: upper left corner, w: width
         labels: tuple
             Segmented button text
@@ -508,3 +508,60 @@ class SegmentedButton(QtWidgets.QToolButton):
         """ Change language of button text  """
         if language == 0:   self.setText(self.label_es)
         elif language == 1: self.setText(self.label_en)
+
+# -----------
+# Icon Button
+# -----------
+class IconButton(QtWidgets.QToolButton):
+    def __init__(self, parent, name: str, geometry: tuple, icon: str, theme: bool) -> None:
+        """ Material Design 3 Component: Icon Button
+
+        Parameters
+        ----------
+        name: str
+            Widget name
+        geometry: tuple
+            Segmented button position
+            (x, y, w) -> x, y: upper left corner, w: width
+        icon: tuple
+            Icon file with extension.
+        theme: bool
+            App theme
+            True: Light theme, False: Dark theme
+        
+        Returns
+        -------
+        None
+        """
+        super(IconButton, self).__init__(parent)
+
+        self.name = name
+        x, y = geometry
+
+        self.setObjectName(self.name)
+        self.setGeometry(x, y, 32, 32)
+        self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
+        self.setAutoRaise(True)
+        self.setEnabled(True)
+        self.setIcon(QtGui.QIcon(f'{images_path}/{icon}'))
+
+        self.apply_styleSheet(theme)
+        
+    def apply_styleSheet(self, theme: bool) -> None:
+        """ Apply theme style sheet to component """
+        if theme:
+            background_color = light["primary"]
+            color = light["on_primary"]
+            hover_background_color = light["secondary"]
+            hover_color = light["on_secondary"]
+        else:
+            background_color = dark["primary"]
+            color = dark["on_primary"]
+            hover_background_color = dark["secondary"]
+            hover_color = dark["on_secondary"]
+        
+        self.setStyleSheet(f'QToolButton#{self.name} {{ border: 0px solid; border-radius: 16;'
+                f'background-color: {background_color}; color: {color} }}'
+                f'QToolButton#{self.name}:hover {{ border: 0px solid; border-radius: 16;'
+                f'background-color: {hover_background_color}; color: {hover_color} }}')
+
