@@ -352,3 +352,282 @@ def ellipsePCA(df: pd.DataFrame) -> dict:
     }
 
     return results
+
+# -------------
+# Base de Datos
+# -------------
+# --------
+# Settings
+# --------
+settings = QSettings(f'{sys.path[0]}/settings.ini', QSettings.Format.IniFormat)
+db_host = settings.value('db_host')
+db_port = settings.value('db_port')
+db_name = settings.value('db_name')
+db_user = settings.value('db_user')
+db_password = settings.value('db_password')
+
+# ---------
+# Funciones
+# ---------
+def create_db(db_table: str) -> list:
+    """ Creates database tables if they don't exist and returns table data
+    
+    Parameters
+    ----------
+    db_table: str
+        Database table name
+    
+    Returns
+    -------
+    table_data: list
+        Data of table if exists (empty if table don't exist)
+    """
+    connection = psycopg2.connect(user=db_user, 
+                                  password=db_password, 
+                                  host=db_host, 
+                                  port=db_port, 
+                                  database=db_name)
+    cursor = connection.cursor()
+
+    if db_table == 'pacientes':
+        cursor.execute("""CREATE TABLE IF NOT EXISTS pacientes (
+                        id serial PRIMARY KEY,
+                        last_name VARCHAR(128) NOT NULL,
+                        first_name VARCHAR(128) NOT NULL,
+                        id_type VARCHAR(128) NOT NULL,
+                        id_number VARCHAR(15) UNIQUE NOT NULL,
+                        birth_date VARCHAR(128) NOT NULL,
+                        sex VARCHAR(128) NOT NULL,
+                        weight VARCHAR(10) NOT NULL,
+                        weight_unit VARCHAR(10) NOT NULL,
+                        height VARCHAR(10) NOT NULL,
+                        height_unit VARCHAR(10) NOT NULL,
+                        bmi VARCHAR(10) NOT NULL
+                        )""")
+    elif db_table == 'estudios':
+        cursor.execute("""CREATE TABLE IF NOT EXISTS estudios (
+                        id serial PRIMARY KEY,
+                        id_number VARCHAR(15) NOT NULL,
+                        file_name VARCHAR(128) UNIQUE NOT NULL,
+                        file_path VARCHAR(128) UNIQUE NOT NULL
+                        )""")
+
+    connection.commit()
+
+    table_data = None
+    if db_table == 'pacientes':
+        cursor.execute('SELECT * FROM pacientes ORDER BY id ASC')
+        table_data = cursor.fetchall()
+    
+    connection.close()
+
+    return table_data
+
+
+def add_db(db_table: str, data: dict) -> list:
+    """ Adds data to database table and returns table data updated
+    
+    Parameters
+    ----------
+    db_table: str
+        Database table name
+    data: dict
+        Data from patient or study file
+    
+    Returns
+    -------
+    table_data: list
+        Data of table updated
+    """
+    if db_table == 'pacientes':
+        last_name_value = data['last_name']
+        first_name_value = data['first_name']
+        id_type_value = data['id_type']
+        id_value = data['id']
+        birth_date_value = data['birth_date']
+        sex_value = data['sex']
+        weight_value = data['weight']
+        weight_unit = data['weight_unit']
+        height_value = data['height']
+        height_unit = data['height_unit']
+        bmi_value = data['bmi']
+    elif db_table == 'estudios':
+        id_value = data['id_number']
+        file_name_value = data['file_name']
+        file_path_value = data['file_path']
+
+    connection = psycopg2.connect(user=db_user, 
+                                  password=db_password, 
+                                  host=db_host, 
+                                  port=db_port, 
+                                  database=db_name)
+    cursor = connection.cursor()
+
+    insert_query = None
+    if db_table == 'pacientes':
+        insert_query = f"""INSERT INTO pacientes (last_name, first_name, id_type, id_number, birth_date, sex, weight, weight_unit, height, height_unit, bmi) 
+                    VALUES ('{last_name_value}', '{first_name_value}', '{id_type_value}', '{id_value}', '{birth_date_value}', '{sex_value}', '{weight_value}', '{weight_unit}', '{height_value}', '{height_unit}', '{bmi_value}')"""
+    elif db_table == 'estudios':
+        insert_query = f"""INSERT INTO estudios (id_number, file_name, file_path) 
+                    VALUES ('{id_value}', '{file_name_value}', '{file_path_value}')"""
+
+    cursor.execute(insert_query)
+    connection.commit()
+
+    table_data = None
+    if db_table == 'pacientes':
+        cursor.execute('SELECT * FROM pacientes ORDER BY id ASC')
+        table_data = cursor.fetchall()
+    elif db_table == 'estudios':
+        cursor.execute(f"SELECT * FROM estudios WHERE id_number='{id_value}' ORDER BY id ASC")
+        table_data = cursor.fetchall()
+    
+    connection.close()
+
+    return table_data
+
+
+def get_db(db_table: str, data_id: str) -> list:
+    """ Get data from database table
+    
+    Parameters
+    ----------
+    db_table: str
+        Database table name
+    data_id: str
+        Patient id number
+    
+    Returns
+    -------
+    table_data: list
+        Data of table
+    """
+    connection = psycopg2.connect(user=db_user, 
+                                  password=db_password, 
+                                  host=db_host, 
+                                  port=db_port, 
+                                  database=db_name)
+    cursor = connection.cursor()
+
+    table_data = None
+    if db_table == 'pacientes':
+        cursor.execute(f"SELECT * FROM pacientes WHERE id_number='{data_id}'")
+    elif db_table == 'estudios':
+        cursor.execute(f"SELECT * FROM estudios WHERE id_number='{data_id}'")
+    table_data = cursor.fetchall()
+    connection.close()
+    
+    return table_data
+
+
+def edit_db(db_table: str, id_db: int, data: dict) -> list:
+    """ Edit data of a database table and returns table data updated
+    
+    Parameters
+    ----------
+    db_table: str
+        Database table name
+    id_db: int
+        Database item id from table
+    data: dict
+        Data from patient or study file
+    
+    Returns
+    -------
+    table_data: list
+        Data of table updated
+    """
+    if db_table == 'pacientes':
+        last_name_value = data['last_name']
+        first_name_value = data['first_name']
+        id_type_value = data['id_type']
+        id_value = data['id']
+        birth_date_value = data['birth_date']
+        sex_value = data['sex']
+        weight_value = data['weight']
+        weight_unit = data['weight_unit']
+        height_value = data['height']
+        height_unit = data['height_unit']
+        bmi_value = data['bmi']
+    elif db_table == 'estudios':
+        id_value = data['id']
+        file_name_value = data['file_name']
+        file_path_value = data['file_path']
+
+    connection = psycopg2.connect(user=db_user, 
+                                  password=db_password, 
+                                  host=db_host, 
+                                  port=db_port, 
+                                  database=db_name)
+    cursor = connection.cursor()    
+    
+    update_query = None
+    if db_table == 'pacientes':
+        update_query = f"""UPDATE pacientes 
+                    SET (last_name, first_name, id_type, id_number, birth_date, sex, weight, weight_unit, height, height_unit, bmi)
+                    = ('{last_name_value}', '{first_name_value}', '{id_type_value}', '{id_value}', '{birth_date_value}', '{sex_value}', '{weight_value}', '{weight_unit}', '{height_value}', '{height_unit}', '{bmi_value}') 
+                    WHERE id = '{id_db}' """
+    elif db_table == 'estudios':
+        update_query = f"""UPDATE estudios 
+                    SET (id_number, file_name, file_path)
+                    = ('{id_value}', '{file_name_value}', '{file_path_value}') 
+                    WHERE id = '{id_db}' """
+    
+    cursor.execute(update_query)
+    connection.commit()
+
+    table_data = None
+    if db_table == 'pacientes':
+        cursor.execute('SELECT * FROM pacientes ORDER BY id ASC')
+        table_data = cursor.fetchall()
+    elif db_table == 'estudios':
+        cursor.execute('SELECT * FROM estudios')
+        table_data = cursor.fetchall()
+    
+    connection.close()
+
+    return table_data
+
+
+def delete_db(db_table: str, data: str) -> list:
+    """ Delete data from database table and returns table data updated
+    
+    Parameters
+    ----------
+    db_table: str
+        Database table name
+    data: str
+        From patient: id number
+        From study: study file
+    
+    Returns
+    -------
+    table_data: list
+        Data of table updated
+    """
+    connection = psycopg2.connect(user=db_user, 
+                                  password=db_password, 
+                                  host=db_host, 
+                                  port=db_port, 
+                                  database=db_name)
+    cursor = connection.cursor()
+
+    delete_query = None
+    if db_table == 'pacientes':
+        delete_query = f"DELETE FROM pacientes WHERE id_number='{data}'"
+    elif db_table == 'estudios':
+        delete_query = f"DELETE FROM estudios WHERE file_name='{data}'"
+    cursor.execute(delete_query)
+    connection.commit()
+
+    table_data = None
+    if db_table == 'pacientes':
+        cursor.execute('SELECT * FROM pacientes ORDER BY id ASC')
+        table_data = cursor.fetchall()
+    elif db_table == 'estudios':
+        cursor.execute('SELECT * FROM estudios')
+        table_data = cursor.fetchall()
+    
+    connection.close()
+
+    return table_data
