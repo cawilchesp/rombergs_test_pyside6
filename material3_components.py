@@ -888,20 +888,21 @@ class Menu(QtWidgets.QComboBox):
             color = light["on_surface"]
             border_color = light["background"]
             disable_color = light["disable"]
+            triangle_image = 'triangle_down_L.png'
         else:
             background_color = dark["surface"]
             color = dark["on_surface"]
             border_color = dark["background"]
             disable_color = dark["disable"]
-        list_combobox_style = (f'QComboBox#{self.name} {{ border: 1px solid {color};'
+            triangle_image = 'triangle_down_D.png'
+        self.setStyleSheet(f'QComboBox#{self.name} {{ border: 1px solid {color};'
                 f'border-radius: 4; background-color: {background_color}; color: {color} }}'
                 f'QComboBox#{self.name}::drop-down {{ border-color: {border_color} }}'
                 f'QComboBox#{self.name}::down-arrow {{ width: 16; height: 16;'
-                f'image: url({images_path}/triangle_down_D.png) }}'
+                f'image: url({images_path}/{triangle_image}) }}'
                 f'QComboBox#{self.name}:!Enabled {{ background-color: {disable_color} }}'
                 f'QComboBox#{self.name} QListView {{ border: 1px solid {color}; border-radius: 4;'
                 f'background-color: {background_color}; color: {color} }}')
-        self.setStyleSheet(list_combobox_style)
 
     def language_text(self, language: int) -> None:
         """ Change language of label text """
