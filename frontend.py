@@ -610,3 +610,514 @@ class App(QWidget):
 
         return super().resizeEvent(a0)
 
+    # ------------------
+    # Funciones Paciente
+    # ------------------
+    def on_paciente_add_button_clicked(self) -> None:
+        """ Add patient button to the database """
+        self.patient_window = patient.Patient()
+        self.patient_window.exec()
+        
+        if self.patient_window.patient_data:
+            if self.patient_window.patient_data['sex'] == 'F':
+                self.sex_label.set_icon('woman', self.theme_value)
+            elif self.patient_window.patient_data['sex'] == 'M':
+                self.sex_label.set_icon('man', self.theme_value)
+
+            self.apellido_value.setText(self.patient_window.patient_data['last_name'])
+            self.nombre_value.setText(self.patient_window.patient_data['first_name'])
+            self.id_value.setText(f'{self.patient_window.patient_data["id_type"]} {self.patient_window.patient_data["id"]}')
+            self.fecha_value.setText(self.patient_window.patient_data['birth_date'])
+            self.sex_value.setText(self.patient_window.patient_data['sex'])
+            self.peso_value.setText(f'{self.patient_window.patient_data["weight"]} {self.patient_window.patient_data["weight_unit"]}')
+            self.altura_value.setText(f'{self.patient_window.patient_data["height"]} {self.patient_window.patient_data["height_unit"]}')
+            self.bmi_value.setText(self.patient_window.patient_data['bmi'])
+
+            # -------------
+            # Base de datos
+            # -------------
+            self.patientes_list = backend.add_db('pacientes', self.patient_window.patient_data)
+            
+            self.pacientes_menu.clear()
+            for data in self.patientes_list:
+                self.pacientes_menu.addItem(data[4])
+            self.pacientes_menu.setCurrentIndex(len(self.patientes_list)-1)
+
+            self.analisis_add_button.setEnabled(True)
+            self.analisis_del_button.setEnabled(True)
+            self.analisis_menu.setEnabled(True)
+
+            if self.language_value == 0:
+                QtWidgets.QMessageBox.information(self, 'Datos Guardados', 'Paciente agregado a la base de datos')
+            elif self.language_value == 1:
+                QtWidgets.QMessageBox.information(self, 'Data Saved', 'Patient added to database')
+        else:
+            if self.language_value == 0:
+                QtWidgets.QMessageBox.critical(self, 'Error de Datos', 'No se dio información de un paciente nuevo')
+            elif self.language_value == 1:
+                QtWidgets.QMessageBox.critical(self, 'Data Error', 'No information on a new patient was given')
+
+
+    def on_paciente_edit_button_clicked(self) -> None:
+        """ Edit patient button in the database """
+        patient_id = self.pacientes_menu.currentText()
+
+        if patient_id != '':
+            patient_data = backend.get_db('pacientes', patient_id)
+
+            id_db = patient_data[0][0]
+            self.patient_window = patient.Patient()
+            self.patient_window.apellido_text.text_field.setText(patient_data[0][1])
+            self.patient_window.nombre_text.text_field.setText(patient_data[0][2])
+            if patient_data[0][3] == 'CC':
+                self.patient_window.cc_button.setChecked(True)
+            elif patient_data[0][3] == 'TI':
+                self.patient_window.ti_button.setChecked(True)
+            self.patient_window.id_text.text_field.setText(patient_data[0][4])
+            self.patient_window.fecha_date.text_field.setDate(QtCore.QDate.fromString(patient_data[0][5], 'dd/MM/yyyy'))
+            if patient_data[0][6] == 'F':
+                self.patient_window.f_button.setChecked(True)
+            elif patient_data[0][6] == 'M':
+                self.patient_window.m_button.setChecked(True)
+            self.patient_window.peso_text.text_field.setText(patient_data[0][7])
+            if patient_data[0][8] == 'Kg':
+                self.patient_window.kg_button.setChecked(True)
+            elif patient_data[0][8] == 'Lb':
+                self.patient_window.lb_button.setChecked(True)
+            self.patient_window.altura_text.text_field.setText(patient_data[0][9])
+            if patient_data[0][10] == 'm':
+                self.patient_window.mt_button.setChecked(True)
+            elif patient_data[0][10] == 'ft - in':
+                self.patient_window.fi_button.setChecked(True)
+            self.patient_window.bmi_value_label.setText(patient_data[0][11])
+
+            self.patient_window.exec()
+
+            if self.patient_window.patient_data:
+                self.patientes_list = backend.edit_db('pacientes', id_db, self.patient_window.patient_data)
+
+                self.pacientes_menu.clear()
+                for data in self.patientes_list:
+                    self.pacientes_menu.addItem(data[4])
+                self.pacientes_menu.setCurrentIndex(-1)
+
+                self.analisis_add_button.setEnabled(False)
+                self.analisis_del_button.setEnabled(False)
+                self.analisis_menu.setEnabled(False)
+
+                self.apellido_value.setText('')
+                self.nombre_value.setText('')
+                self.id_value.setText('')
+                self.fecha_value.setText('')
+                self.sex_value.setText('')
+                self.sex_label.set_icon('', self.theme_value)
+                self.peso_value.setText('')
+                self.altura_value.setText('')
+                self.bmi_value.setText('')
+
+                if self.language_value == 0:
+                    QtWidgets.QMessageBox.information(self, 'Datos Guardados', 'Paciente editado en la base de datos')
+                elif self.language_value == 1:
+                    QtWidgets.QMessageBox.information(self, 'Data Saved', 'Patient edited in database')
+            else:
+                if self.language_value == 0:
+                    QtWidgets.QMessageBox.critical(self, 'Error de Datos', 'No se dio información del paciente')
+                elif self.language_value == 1:
+                    QtWidgets.QMessageBox.critical(self, 'Data Error', 'No information on a patient was given')
+        else:
+            if self.language_value == 0:
+                QtWidgets.QMessageBox.critical(self, 'Error de Paciente', 'No se seleccionó un paciente')
+            elif self.language_value == 1:
+                QtWidgets.QMessageBox.critical(self, 'Patient Error', 'No patient selected')
+
+
+    def on_paciente_del_button_clicked(self) -> None:
+        """ Delete patient button from the database """
+        patient_id = self.pacientes_menu.currentText()
+
+        if patient_id != '':
+            self.patientes_list = backend.delete_db('pacientes', patient_id)
+
+            self.pacientes_menu.clear()
+            for data in self.patientes_list:
+                self.pacientes_menu.addItem(data[4])
+            self.pacientes_menu.setCurrentIndex(-1)
+
+            self.analisis_add_button.setEnabled(False)
+            self.analisis_del_button.setEnabled(False)
+            self.analisis_menu.setEnabled(False)
+
+            self.apellido_value.setText('')
+            self.nombre_value.setText('')
+            self.id_value.setText('')
+            self.fecha_value.setText('')
+            self.sex_value.setText('')
+            self.sex_label.set_icon('', self.theme_value)
+            self.peso_value.setText('')
+            self.altura_value.setText('')
+            self.bmi_value.setText('')
+
+            if self.language_value == 0:
+                QtWidgets.QMessageBox.information(self, 'Datos Guardados', 'Paciente eliminado de la base de datos')
+            elif self.language_value == 1:
+                QtWidgets.QMessageBox.information(self, 'Data Saved', 'Patient deleted from database')
+        else:
+            if self.language_value == 0:
+                QtWidgets.QMessageBox.critical(self, 'Error de Paciente', 'No se seleccionó un paciente')
+            elif self.language_value == 1:
+                QtWidgets.QMessageBox.critical(self, 'Patient Error', 'No patient selected')
+
+
+    def on_pacientes_menu_textActivated(self, current_pacient: str) -> None:
+        """ Change active patient and present previously saved studies and information
+        
+        Parameters
+        ----------
+        current_pacient: str
+            Current pacient text
+        
+        Returns
+        -------
+        None
+        """
+        patient_data = backend.get_db('pacientes', current_pacient)
+
+        if patient_data[0][6] == 'F':
+            self.sex_label.set_icon('woman', self.theme_value)
+        elif patient_data[0][6] == 'M':
+            self.sex_label.set_icon('man', self.theme_value)
+
+        self.apellido_value.setText(patient_data[0][1])
+        self.nombre_value.setText(patient_data[0][2])
+        self.id_value.setText(f'{patient_data[0][3]} {patient_data[0][4]}')
+        self.fecha_value.setText(patient_data[0][5])
+        self.sex_value.setText(patient_data[0][6])
+        self.peso_value.setText(f'{patient_data[0][7]} {patient_data[0][8]}')
+        self.altura_value.setText(f'{patient_data[0][9]} {patient_data[0][10]}')
+        self.bmi_value.setText(patient_data[0][11])
+
+        self.analisis_add_button.setEnabled(True)
+        self.analisis_del_button.setEnabled(True)
+        self.analisis_menu.setEnabled(True)
+
+        self.estudios_list = backend.get_db('estudios', current_pacient)
+        self.analisis_menu.clear()
+        for data in self.estudios_list:
+            self.analisis_menu.addItem(data[2])
+        self.analisis_menu.setCurrentIndex(-1)
+
+        self.lateral_plot.axes.cla()
+        self.lateral_plot.draw()
+        self.antePost_plot.axes.cla()
+        self.antePost_plot.draw()
+        self.elipse_plot.axes.cla()
+        self.elipse_plot.draw()
+        self.hull_plot.axes.cla()
+        self.hull_plot.draw()
+        self.pca_plot.axes.cla()
+        self.pca_plot.draw()
+
+        self.lat_rango_value.setText('')
+        self.lat_vel_value.setText('')
+        self.lat_rms_value.setText('')
+        self.ap_rango_value.setText('')
+        self.ap_vel_value.setText('')
+        self.ap_rms_value.setText('')
+        self.cop_vel_value.setText('')
+        self.distancia_value.setText('')
+        self.frecuencia_value.setText('')
+        self.elipse_value.setText('')
+        self.hull_value.setText('')
+        self.pca_value.setText('')
+
+    
+    # -----------------
+    # Funciones Estudio
+    # -----------------
+    def on_analisis_add_button_clicked(self) -> None:
+        """ Add analysis button to the database """
+        selected_file = QtWidgets.QFileDialog.getOpenFileName(None,
+                'Seleccione el archivo de datos', 'D:/Data/Asdhar Alonso/',
+                'Archivos de Datos (*.csv *.txt *.emt)')[0]
+
+        if selected_file:
+            df = pd.read_csv(selected_file, sep='\t', skiprows=43, encoding='ISO-8859-1')
+
+            results = backend.analisis(df)
+            
+            # ----------------
+            # Gráficas Señales
+            # ----------------
+            data_lat = results['data_x']
+            data_ap = results['data_y']
+            data_t = results['data_t']
+
+            self.data_lat_max = results['lat_max']
+            self.data_lat_t_max = results['lat_t_max']
+            self.data_lat_min = results['lat_min']
+            self.data_lat_t_min = results['lat_t_min']
+
+            self.lateral_plot.axes.cla()
+            self.lateral_plot.fig.subplots_adjust(left=0.05, bottom=0.15, right=1, top=0.95, wspace=0, hspace=0)
+            self.lateral_plot.axes.plot(data_t, data_lat, '#42A4F5')
+            self.lateral_plot.axes.plot(self.data_lat_t_max, self.data_lat_max, marker="o", markersize=3, markeredgecolor='#FF2D55', markerfacecolor='#FF2D55')
+            self.lateral_plot.axes.plot(self.data_lat_t_min, self.data_lat_min, marker="o", markersize=3, markeredgecolor='#FF2D55', markerfacecolor='#FF2D55')
+            if self.theme_value:
+                self.lat_text_1 = self.lateral_plot.axes.text(self.data_lat_t_max, self.data_lat_max, f'{self.data_lat_max:.2f}', color='#000000')
+                self.lat_text_2 = self.lateral_plot.axes.text(self.data_lat_t_min, self.data_lat_min, f'{self.data_lat_min:.2f}', color='#000000')
+            else:
+                self.lat_text_1 = self.lateral_plot.axes.text(self.data_lat_t_max, self.data_lat_max, f'{self.data_lat_max:.2f}', color='#E5E9F0')
+                self.lat_text_2 = self.lateral_plot.axes.text(self.data_lat_t_min, self.data_lat_min, f'{self.data_lat_min:.2f}', color='#E5E9F0')
+            self.lateral_plot.draw()
+
+            self.data_ap_max = results['ap_max']
+            self.data_ap_t_max = results['ap_t_max']
+            self.data_ap_min = results['ap_min']
+            self.data_ap_t_min = results['ap_t_min']
+
+            self.antePost_plot.axes.cla()
+            self.antePost_plot.fig.subplots_adjust(left=0.05, bottom=0.15, right=1, top=0.95, wspace=0, hspace=0)
+            self.antePost_plot.axes.plot(data_t, data_ap, '#42A4F5')
+            self.antePost_plot.axes.plot(self.data_ap_t_max, self.data_ap_max, marker="o", markersize=3, markeredgecolor='#FF2D55', markerfacecolor='#FF2D55')
+            self.antePost_plot.axes.plot(self.data_ap_t_min, self.data_ap_min, marker="o", markersize=3, markeredgecolor='#FF2D55', markerfacecolor='#FF2D55')
+            if self.theme_value:
+                self.ap_text_1 = self.antePost_plot.axes.text(self.data_ap_t_max, self.data_ap_max, f'{self.data_ap_max:.2f}', color='#000000')
+                self.ap_text_2 = self.antePost_plot.axes.text(self.data_ap_t_min, self.data_ap_min, f'{self.data_ap_min:.2f}', color='#000000')
+            else:
+                self.ap_text_1 = self.antePost_plot.axes.text(self.data_ap_t_max, self.data_ap_max, f'{self.data_ap_max:.2f}', color='#E5E9F0')
+                self.ap_text_2 = self.antePost_plot.axes.text(self.data_ap_t_min, self.data_ap_min, f'{self.data_ap_min:.2f}', color='#E5E9F0')
+            self.antePost_plot.draw()
+
+            # --------------
+            # Gráficas Áreas
+            # --------------
+            data_elipse = backend.ellipseStandard(df)
+            self.elipse_plot.axes.cla()
+            self.elipse_plot.fig.subplots_adjust(left=0.1, bottom=0.1, right=1, top=0.95, wspace=0, hspace=0)
+            self.elipse_plot.axes.scatter(data_lat, data_ap, marker='.', color='#42A4F5')
+            self.elipse_plot.axes.plot(data_elipse['x'], data_elipse['y'], '#FF2D55')
+            self.elipse_plot.axes.axis('equal')
+            self.elipse_plot.draw()
+
+            data_convex = backend.convexHull(df)
+            self.hull_plot.axes.cla()
+            self.hull_plot.fig.subplots_adjust(left=0.1, bottom=0.1, right=1, top=0.95, wspace=0, hspace=0)
+            self.hull_plot.axes.scatter(data_lat, data_ap, marker='.', color='#42A4F5')
+            self.hull_plot.axes.fill(data_convex['x'], data_convex['y'], edgecolor='#FF2D55', fill=False, linewidth=2)
+            self.hull_plot.axes.axis('equal')
+            self.hull_plot.draw()
+
+            data_pca = backend.ellipsePCA(df)
+            self.pca_plot.axes.cla()
+            self.pca_plot.fig.subplots_adjust(left=0.1, bottom=0.1, right=1, top=0.95, wspace=0, hspace=0)
+            self.pca_plot.axes.scatter(data_lat, data_ap, marker='.', color='#42A4F5')
+            self.pca_plot.axes.plot(data_pca['x'], data_pca['y'], '#FF2D55')
+            self.pca_plot.axes.axis('equal')
+            self.pca_plot.draw()
+
+            # --------------------------
+            # Presentación de resultados
+            # --------------------------
+            self.lat_rango_value.setText(f'{results["lat_rango"]:.2f}')
+            self.lat_vel_value.setText(f'{results["lat_vel"]:.2f}')
+            self.lat_rms_value.setText(f'{results["lat_rms"]:.2f}')
+
+            self.ap_rango_value.setText(f'{results["ap_rango"]:.2f}')
+            self.ap_vel_value.setText(f'{results["ap_vel"]:.2f}')
+            self.ap_rms_value.setText(f'{results["ap_rms"]:.2f}')
+
+            self.cop_vel_value.setText(f'{results["centro_vel"]:.2f}')
+            self.distancia_value.setText(f'{results["centro_dist"]:.2f}')
+            self.frecuencia_value.setText(f'{results["centro_frec"]:.2f}')
+
+            self.elipse_value.setText(f'{data_elipse["area"]:.2f}')
+            self.hull_value.setText(f'{data_convex["area"]:.2f}')
+            self.pca_value.setText(f'{data_pca["area"]:.2f}')
+
+            # -------------
+            # Base de datos
+            # -------------
+            study_data = {
+                'id_number': self.pacientes_menu.currentText(),
+                'file_name': Path(selected_file).name,
+                'file_path': selected_file
+                }
+            self.estudios_list = backend.add_db('estudios', study_data)
+            
+            self.analisis_menu.clear()
+            for data in self.estudios_list:
+                self.analisis_menu.addItem(data[2])
+            self.analisis_menu.setCurrentIndex(len(self.patientes_list)-1)
+
+            if self.language_value == 0:
+                QtWidgets.QMessageBox.information(self, 'Datos Guardados', 'Estudio agregado a la base de datos')
+            elif self.language_value == 1:
+                QtWidgets.QMessageBox.information(self, 'Data Saved', 'Study added to database')
+        else:
+            if self.language_value == 0:
+                QtWidgets.QMessageBox.critical(self, 'Error de Datos', 'No se seleccióno un archivo para el estudio')
+            elif self.language_value == 1:
+                QtWidgets.QMessageBox.critical(self, 'Data Error', 'No file for a study was given')
+
+
+    def on_analisis_del_button_clicked(self) -> None:
+        """ Delete analysis button from the database """
+        current_study = self.analisis_menu.currentText()
+
+        if current_study != '':
+            self.estudios_list = backend.delete_db('estudios', current_study)
+            
+            self.analisis_menu.clear()
+            for data in self.estudios_list:
+                self.analisis_menu.addItem(data[2])
+            self.analisis_menu.setCurrentIndex(-1)
+
+            self.lateral_plot.axes.cla()
+            self.lateral_plot.draw()
+            self.antePost_plot.axes.cla()
+            self.antePost_plot.draw()
+            self.elipse_plot.axes.cla()
+            self.elipse_plot.draw()
+            self.hull_plot.axes.cla()
+            self.hull_plot.draw()
+            self.pca_plot.axes.cla()
+            self.pca_plot.draw()
+
+            self.lat_rango_value.setText('')
+            self.lat_vel_value.setText('')
+            self.lat_rms_value.setText('')
+            self.ap_rango_value.setText('')
+            self.ap_vel_value.setText('')
+            self.ap_rms_value.setText('')
+            self.cop_vel_value.setText('')
+            self.distancia_value.setText('')
+            self.frecuencia_value.setText('')
+            self.elipse_value.setText('')
+            self.hull_value.setText('')
+            self.pca_value.setText('')
+
+            if self.language_value == 0:
+                QtWidgets.QMessageBox.information(self, 'Datos Guardados', 'Análisis eliminado de la base de datos')
+            elif self.language_value == 1:
+                QtWidgets.QMessageBox.information(self, 'Data Saved', 'Analysis deleted from database')
+        else:
+            if self.language_value == 0:
+                QtWidgets.QMessageBox.critical(self, 'Error de Análisis', 'No se seleccionó un análisis')
+            elif self.language_value == 1:
+                QtWidgets.QMessageBox.critical(self, 'Analysis Error', 'No analysis selected')
+
+
+    def on_analisis_menu_textActivated(self, current_study: str):
+        """ Change analysis and present results
+        
+        Parameters
+        ----------
+        current_study: str
+            Current study text
+        
+        Returns
+        -------
+        None
+        """
+        analisis_data = backend.get_db('estudios', self.pacientes_menu.currentText())
+        study_path = [item for item in analisis_data if item[2] == current_study][0][3]
+
+        df = pd.read_csv(study_path, sep='\t', skiprows=43, encoding='ISO-8859-1')
+
+        results = backend.analisis(df)
+        
+        # ----------------
+        # Gráficas Señales
+        # ----------------
+        data_lat = results['data_x']
+        data_ap = results['data_y']
+        data_t = results['data_t']
+
+        self.data_lat_max = results['lat_max']
+        self.data_lat_t_max = results['lat_t_max']
+        self.data_lat_min = results['lat_min']
+        self.data_lat_t_min = results['lat_t_min']
+
+        self.lateral_plot.axes.cla()
+        self.lateral_plot.fig.subplots_adjust(left=0.05, bottom=0.1, right=1, top=0.95, wspace=0, hspace=0)
+        self.lateral_plot.axes.plot(data_t, data_lat, '#42A4F5')
+        self.lateral_plot.axes.plot(self.data_lat_t_max, self.data_lat_max, marker="o", markersize=3, markeredgecolor='#FF2D55', markerfacecolor='#FF2D55')
+        self.lateral_plot.axes.plot(self.data_lat_t_min, self.data_lat_min, marker="o", markersize=3, markeredgecolor='#FF2D55', markerfacecolor='#FF2D55')
+        if self.theme_value:
+            self.lat_text_1 = self.lateral_plot.axes.text(self.data_lat_t_max, self.data_lat_max, f'{self.data_lat_max:.2f}', color='#000000')
+            self.lat_text_2 = self.lateral_plot.axes.text(self.data_lat_t_min, self.data_lat_min, f'{self.data_lat_min:.2f}', color='#000000')
+        else:
+            self.lat_text_1 = self.lateral_plot.axes.text(self.data_lat_t_max, self.data_lat_max, f'{self.data_lat_max:.2f}', color='#E5E9F0')
+            self.lat_text_2 = self.lateral_plot.axes.text(self.data_lat_t_min, self.data_lat_min, f'{self.data_lat_min:.2f}', color='#E5E9F0')
+        self.lateral_plot.draw()
+
+        self.data_ap_max = results['ap_max']
+        self.data_ap_t_max = results['ap_t_max']
+        self.data_ap_min = results['ap_min']
+        self.data_ap_t_min = results['ap_t_min']
+
+        self.antePost_plot.axes.cla()
+        self.antePost_plot.fig.subplots_adjust(left=0.05, bottom=0.1, right=1, top=0.95, wspace=0, hspace=0)
+        self.antePost_plot.axes.plot(data_t, data_ap, '#42A4F5')
+        self.antePost_plot.axes.plot(self.data_ap_t_max, self.data_ap_max, marker="o", markersize=3, markeredgecolor='#FF2D55', markerfacecolor='#FF2D55')
+        self.antePost_plot.axes.plot(self.data_ap_t_min, self.data_ap_min, marker="o", markersize=3, markeredgecolor='#FF2D55', markerfacecolor='#FF2D55')
+        if self.theme_value:
+            self.ap_text_1 = self.antePost_plot.axes.text(self.data_ap_t_max, self.data_ap_max, f'{self.data_ap_max:.2f}', color='#000000')
+            self.ap_text_2 = self.antePost_plot.axes.text(self.data_ap_t_min, self.data_ap_min, f'{self.data_ap_min:.2f}', color='#000000')
+        else:
+            self.ap_text_1 = self.antePost_plot.axes.text(self.data_ap_t_max, self.data_ap_max, f'{self.data_ap_max:.2f}', color='#E5E9F0')
+            self.ap_text_2 = self.antePost_plot.axes.text(self.data_ap_t_min, self.data_ap_min, f'{self.data_ap_min:.2f}', color='#E5E9F0')
+        self.antePost_plot.draw()
+
+        # --------------
+        # Gráficas Áreas
+        # --------------
+        data_elipse = backend.ellipseStandard(df)
+        self.elipse_plot.axes.cla()
+        self.elipse_plot.fig.subplots_adjust(left=0.1, bottom=0.1, right=1, top=0.95, wspace=0, hspace=0)
+        self.elipse_plot.axes.scatter(data_lat, data_ap, marker='.', color='#42A4F5')
+        self.elipse_plot.axes.plot(data_elipse['x'], data_elipse['y'], '#FF2D55')
+        self.elipse_plot.axes.axis('equal')
+        self.elipse_plot.draw()
+
+        data_convex = backend.convexHull(df)
+        self.hull_plot.axes.cla()
+        self.hull_plot.fig.subplots_adjust(left=0.1, bottom=0.1, right=1, top=0.95, wspace=0, hspace=0)
+        self.hull_plot.axes.scatter(data_lat, data_ap, marker='.', color='#42A4F5')
+        self.hull_plot.axes.fill(data_convex['x'], data_convex['y'], edgecolor='#FF2D55', fill=False, linewidth=2)
+        self.hull_plot.axes.axis('equal')
+        self.hull_plot.draw()
+
+        data_pca = backend.ellipsePCA(df)
+        self.pca_plot.axes.cla()
+        self.pca_plot.fig.subplots_adjust(left=0.1, bottom=0.1, right=1, top=0.95, wspace=0, hspace=0)
+        self.pca_plot.axes.scatter(data_lat, data_ap, marker='.', color='#42A4F5')
+        self.pca_plot.axes.plot(data_pca['x'], data_pca['y'], '#FF2D55')
+        self.pca_plot.axes.axis('equal')
+        self.pca_plot.draw()
+
+        # --------------------------
+        # Presentación de resultados
+        # --------------------------
+        self.lat_rango_value.setText(f'{results["lat_rango"]:.2f}')
+        self.lat_vel_value.setText(f'{results["lat_vel"]:.2f}')
+        self.lat_rms_value.setText(f'{results["lat_rms"]:.2f}')
+
+        self.ap_rango_value.setText(f'{results["ap_rango"]:.2f}')
+        self.ap_vel_value.setText(f'{results["ap_vel"]:.2f}')
+        self.ap_rms_value.setText(f'{results["ap_rms"]:.2f}')
+
+        self.cop_vel_value.setText(f'{results["centro_vel"]:.2f}')
+        self.distancia_value.setText(f'{results["centro_dist"]:.2f}')
+        self.frecuencia_value.setText(f'{results["centro_frec"]:.2f}')
+
+        self.elipse_value.setText(f'{data_elipse["area"]:.2f}')
+        self.hull_value.setText(f'{data_convex["area"]:.2f}')
+        self.pca_value.setText(f'{data_pca["area"]:.2f}')
+
+
+if __name__=="__main__":
+    app = QApplication(sys.argv)
+    a = App()
+    a.show()
+    sys.exit(app.exec())
