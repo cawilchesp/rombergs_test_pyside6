@@ -910,5 +910,42 @@ class Menu(QtWidgets.QComboBox):
             if language == 0:   self.setItemText(key, value[0])
             elif language == 1: self.setItemText(key, value[1])
 
+# ------
+# Slider
+# ------
+class Slider(QtWidgets.QSlider):
+    def __init__(self, parent, name: str, geometry: tuple, theme: bool) -> None:
+        """ Material Design 3 Component: Slider
 
+        Parameters
+        ----------
+        name: str
+            Widget name
+        geometry: tuple
+            Slider position and width
+            (x, y, w) -> x, y: upper left corner, w: width
+        theme: bool
+            App theme
+            True: Light theme, False: Dark theme
+        
+        Returns
+        -------
+        None
+        """
+        super(Slider, self).__init__(parent)
 
+        self.name = name
+        x, y, w = geometry
+
+        self.setObjectName(self.name)
+        self.setGeometry(x, y, w, 32)
+        self.setOrientation(Qt.Orientation.Horizontal)
+        self.setMinimum(0)
+        self.setSingleStep(1)
+        self.apply_styleSheet(theme)
+
+    def apply_styleSheet(self, theme: bool) -> None:
+        """ Apply theme style sheet to component """
+        if theme: background_color = light["surface"]
+        else: background_color = dark["surface"]
+        self.setStyleSheet(f'QSlider#{self.name} {{ background-color: {background_color} }}')
