@@ -355,3 +355,240 @@ class App(QWidget):
         y_7 += 20
         self.pca_value = mt3.ValueLabel(self.areas_card, 'pca_value',
             (8, y_7, 192), self.theme_value)
+
+# ----------------
+    # Funciones Título
+    # ----------------
+    def on_idioma_menu_currentIndexChanged(self, index: int) -> None:
+        """ Language menu control to change components text language """
+
+        self.idioma_menu.language_text(index)
+        
+        self.paciente_card.language_text(index)
+        self.analisis_card.language_text(index)
+        self.info_card.language_text(index)
+
+        self.lateral_plot_card.language_text(index)
+        self.antePost_plot_card.language_text(index)
+        self.elipse_plot_card.language_text(index)
+        self.hull_plot_card.language_text(index)
+        self.pca_plot_card.language_text(index)
+
+        self.lateral_card.language_text(index)
+        self.lat_rango_label.language_text(index)
+        self.lat_vel_label.language_text(index)
+        self.lat_rms_label.language_text(index)
+
+        self.antPost_card.language_text(index)
+        self.ap_rango_label.language_text(index)
+        self.ap_vel_label.language_text(index)
+        self.ap_rms_label.language_text(index)
+        
+        self.centro_card.language_text(index)
+        self.cop_vel_label.language_text(index)
+        self.distancia_label.language_text(index)
+        self.frecuencia_label.language_text(index)
+
+        self.areas_card.language_text(index)
+        self.elipse_label.language_text(index)
+        self.hull_label.language_text(index)
+        self.pca_label.language_text(index)
+
+        self.settings.setValue('language', str(index))
+        self.language_value = int(self.settings.value('language'))
+
+
+    def on_tema_switch_clicked(self, index: bool) -> None:
+        """ Theme switch control to change components stylesheet """
+
+        if index: self.setStyleSheet('background-color: #E5E9F0; color: #000000')
+        else: self.setStyleSheet('background-color: #3B4253; color: #E5E9F0')
+
+        self.titulo_card.apply_styleSheet(index)
+        self.idioma_menu.apply_styleSheet(index)
+        self.tema_switch.set_state(index)
+        self.tema_switch.apply_styleSheet(index)
+        self.database_button.apply_styleSheet(index)
+        self.manual_button.apply_styleSheet(index)
+        self.about_button.apply_styleSheet(index)
+        self.aboutQt_button.apply_styleSheet(index)
+
+        self.paciente_card.apply_styleSheet(index)
+        self.paciente_add_button.apply_styleSheet(index)
+        self.paciente_edit_button.apply_styleSheet(index)
+        self.paciente_del_button.apply_styleSheet(index)
+        self.pacientes_menu.apply_styleSheet(index)
+
+        self.analisis_card.apply_styleSheet(index)
+        self.analisis_add_button.apply_styleSheet(index)
+        self.analisis_del_button.apply_styleSheet(index)
+        self.analisis_menu.apply_styleSheet(index)
+
+        self.info_card.apply_styleSheet(index)
+        self.apellido_value.apply_styleSheet(index)
+        self.nombre_value.apply_styleSheet(index)
+        self.id_label.apply_styleSheet(index)
+        self.id_label.set_icon('id', index)
+        self.id_value.apply_styleSheet(index)
+        self.fecha_label.apply_styleSheet(index)
+        self.fecha_label.set_icon('calendar', index)
+        self.fecha_value.apply_styleSheet(index)
+        self.sex_label.apply_styleSheet(index)
+        self.sex_value.apply_styleSheet(index)
+        
+        if self.sex_value.text() == 'F': self.sex_label.set_icon('woman', index)
+        elif self.sex_value.text() == 'M': self.sex_label.set_icon('man', index)
+
+        self.peso_label.apply_styleSheet(index)
+        self.peso_label.set_icon('weight', index)
+        self.peso_value.apply_styleSheet(index)
+        self.altura_label.apply_styleSheet(index)
+        self.altura_label.set_icon('height', index)
+        self.altura_value.apply_styleSheet(index)
+        self.bmi_value.apply_styleSheet(index)
+
+        self.lateral_plot_card.apply_styleSheet(index)
+        self.antePost_plot_card.apply_styleSheet(index)
+        self.elipse_plot_card.apply_styleSheet(index)
+        self.hull_plot_card.apply_styleSheet(index)
+        self.pca_plot_card.apply_styleSheet(index)
+
+        self.lateral_plot.apply_styleSheet(index)
+        if self.lat_text_1:
+            self.lat_text_1.remove()
+            self.lat_text_2.remove()
+            if index:
+                self.lat_text_1 = self.lateral_plot.axes.text(self.data_lat_t_max, self.data_lat_max, f'{self.data_lat_max:.2f}', color='#000000')
+                self.lat_text_2 = self.lateral_plot.axes.text(self.data_lat_t_min, self.data_lat_min, f'{self.data_lat_min:.2f}', color='#000000')
+            else:
+                self.lat_text_1 = self.lateral_plot.axes.text(self.data_lat_t_max, self.data_lat_max, f'{self.data_lat_max:.2f}', color='#E5E9F0')
+                self.lat_text_2 = self.lateral_plot.axes.text(self.data_lat_t_min, self.data_lat_min, f'{self.data_lat_min:.2f}', color='#E5E9F0')
+        self.lateral_plot.draw()
+        self.antePost_plot.apply_styleSheet(index)
+        if self.ap_text_1:
+            self.ap_text_1.remove()
+            self.ap_text_2.remove()
+            if index:
+                self.ap_text_1 = self.antePost_plot.axes.text(self.data_ap_t_max, self.data_ap_max, f'{self.data_ap_max:.2f}', color='#000000')
+                self.ap_text_2 = self.antePost_plot.axes.text(self.data_ap_t_min, self.data_ap_min, f'{self.data_ap_min:.2f}', color='#000000')
+            else:
+                self.ap_text_1 = self.antePost_plot.axes.text(self.data_ap_t_max, self.data_ap_max, f'{self.data_ap_max:.2f}', color='#E5E9F0')
+                self.ap_text_2 = self.antePost_plot.axes.text(self.data_ap_t_min, self.data_ap_min, f'{self.data_ap_min:.2f}', color='#E5E9F0')
+        self.antePost_plot.draw()
+        self.elipse_plot.apply_styleSheet(index)
+        self.elipse_plot.draw()
+        self.hull_plot.apply_styleSheet(index)
+        self.hull_plot.draw()
+        self.pca_plot.apply_styleSheet(index)
+        self.pca_plot.draw()
+
+        self.lateral_card.apply_styleSheet(index)
+        self.lat_rango_label.apply_styleSheet(index)
+        self.lat_rango_value.apply_styleSheet(index)
+        self.lat_vel_label.apply_styleSheet(index)
+        self.lat_vel_value.apply_styleSheet(index)
+        self.lat_rms_label.apply_styleSheet(index)
+        self.lat_rms_value.apply_styleSheet(index)
+
+        self.antPost_card.apply_styleSheet(index)
+        self.ap_rango_label.apply_styleSheet(index)
+        self.ap_rango_value.apply_styleSheet(index)
+        self.ap_vel_label.apply_styleSheet(index)
+        self.ap_vel_value.apply_styleSheet(index)
+        self.ap_rms_label.apply_styleSheet(index)
+        self.ap_rms_value.apply_styleSheet(index)
+
+        self.centro_card.apply_styleSheet(index)
+        self.cop_vel_label.apply_styleSheet(index)
+        self.cop_vel_value.apply_styleSheet(index)
+        self.distancia_label.apply_styleSheet(index)
+        self.distancia_value.apply_styleSheet(index)
+        self.frecuencia_label.apply_styleSheet(index)
+        self.frecuencia_value.apply_styleSheet(index)
+
+        self.areas_card.apply_styleSheet(index)
+        self.elipse_label.apply_styleSheet(index)
+        self.elipse_value.apply_styleSheet(index)
+        self.hull_label.apply_styleSheet(index)
+        self.hull_value.apply_styleSheet(index)
+        self.pca_label.apply_styleSheet(index)
+        self.pca_value.apply_styleSheet(index)
+
+        self.settings.setValue('theme', f'{index}')
+        self.theme_value = eval(self.settings.value('theme'))
+
+
+    def on_database_button_clicked(self) -> None:
+        """ Database button to configure the database """
+        self.db_info = database.Database()
+        self.db_info.exec()
+
+        if self.db_info.database_data:
+            if self.language_value == 0:
+                QtWidgets.QMessageBox.information(self, 'Datos Guardados', 'Base de datos configurada')
+            elif self.language_value == 1:
+                QtWidgets.QMessageBox.information(self, 'Data Saved', 'Database configured')
+        else:
+            if self.language_value == 0:
+                QtWidgets.QMessageBox.critical(self, 'Error de Datos', 'No se dio información de la base de datos')
+            elif self.language_value == 1:
+                QtWidgets.QMessageBox.critical(self, 'Data Error', 'No information on the database was given')
+
+
+    def on_manual_button_clicked(self) -> None:
+        """ Manual button to open manual window """
+        return 0
+
+
+    def on_about_button_clicked(self) -> None:
+        """ About app button to open about app window dialog """
+        self.about = backend.AboutApp()
+        self.about.exec()
+
+
+    def on_aboutQt_button_clicked(self) -> None:
+        """ About Qt button to open about Qt window dialog """
+        backend.about_qt_dialog(self, self.language_value)
+        
+    
+    def resizeEvent(self, a0: QtGui.QResizeEvent) -> None:
+        """ Resize event to control size and position of app components """
+        width = self.geometry().width()
+        height = self.geometry().height()
+
+        self.titulo_card.resize(width - 16, 48)
+        self.titulo_card.title.resize(width - 304, 32)
+        self.idioma_menu.move(width - 312, 8)
+        self.tema_switch.move(width - 232, 8)
+        self.database_button.move(width - 176, 8)
+        self.manual_button.move(width - 136, 8)
+        self.about_button.move(width - 96, 8)
+        self.aboutQt_button.move(width - 56, 8)
+
+        self.lateral_plot_card.setGeometry(196, 64, width - 636, int(height * 0.25))
+        self.lateral_plot_card.title.resize(width - 652, 32)
+        self.lateral_plot.setGeometry(8, 48, self.lateral_plot_card.width()-16, self.lateral_plot_card.height()-56)
+        
+        self.antePost_plot_card.setGeometry(196, int(72 + (height * 0.25)), width - 636, int(height * 0.25))
+        self.antePost_plot_card.title.resize(width - 652, 32)
+        self.antePost_plot.setGeometry(8, 48, self.antePost_plot_card.width()-16, self.antePost_plot_card.height()-56)
+        
+        self.elipse_plot_card.setGeometry(196, int(80 + (height * 0.5)), int((width - 652) / 3), int(height - (88 + (height * 0.5))))
+        self.elipse_plot_card.title.resize(self.elipse_plot_card.width() - 16, 32)
+        self.elipse_plot.setGeometry(8, 48, self.elipse_plot_card.width()-16, self.elipse_plot_card.height()-56)
+        
+        self.hull_plot_card.setGeometry(int(204 + ((width - 652) / 3)), int(80 + (height * 0.5)), int((width - 652) / 3), int(height - (88 + (height * 0.5))))
+        self.hull_plot_card.title.resize(self.hull_plot_card.width() - 16, 32)
+        self.hull_plot.setGeometry(8, 48, self.hull_plot_card.width()-16, self.hull_plot_card.height() - 56)
+        
+        self.pca_plot_card.setGeometry(int(212 + (2 * (width - 652) / 3)), int(80 + (height * 0.5)), int((width - 652) / 3), int(height - (88 + (height * 0.5))))
+        self.pca_plot_card.title.resize(self.pca_plot_card.width() - 16, 32)
+        self.pca_plot.setGeometry(8, 48, self.pca_plot_card.width()-16, self.pca_plot_card.height() - 56)
+        
+        self.lateral_card.setGeometry(width - 432, 64, 208, 228)
+        self.antPost_card.setGeometry(width - 216, 64, 208, 228)
+        self.centro_card.setGeometry(width - 432, 300, 208, 228)
+        self.areas_card.setGeometry(width - 216, 300, 208, 228)
+
+        return super().resizeEvent(a0)
+
