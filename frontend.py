@@ -360,8 +360,17 @@ class App(QWidget):
     # Funciones Título
     # ----------------
     def on_idioma_menu_currentIndexChanged(self, index: int) -> None:
-        """ Language menu control to change components text language """
-
+        """ Language menu control to change components text language
+        
+        Parameters
+        ----------
+        index: int
+            Index of language menu control
+        
+        Returns
+        -------
+        None
+        """
         self.idioma_menu.language_text(index)
         
         self.paciente_card.language_text(index)
@@ -398,123 +407,132 @@ class App(QWidget):
         self.language_value = int(self.settings.value('language'))
 
 
-    def on_tema_switch_clicked(self, index: bool) -> None:
-        """ Theme switch control to change components stylesheet """
-
-        if index: self.setStyleSheet('background-color: #E5E9F0; color: #000000')
+    def on_tema_switch_clicked(self, state: bool) -> None:
+        """ Theme switch control to change components stylesheet
+        
+        Parameters
+        ----------
+        state: bool
+            State of theme switch control
+        
+        Returns
+        -------
+        None
+        """
+        if state: self.setStyleSheet('background-color: #E5E9F0; color: #000000')
         else: self.setStyleSheet('background-color: #3B4253; color: #E5E9F0')
 
-        self.titulo_card.apply_styleSheet(index)
-        self.idioma_menu.apply_styleSheet(index)
-        self.tema_switch.set_state(index)
-        self.tema_switch.apply_styleSheet(index)
-        self.database_button.apply_styleSheet(index)
-        self.manual_button.apply_styleSheet(index)
-        self.about_button.apply_styleSheet(index)
-        self.aboutQt_button.apply_styleSheet(index)
+        self.titulo_card.apply_styleSheet(state)
+        self.idioma_menu.apply_styleSheet(state)
+        self.tema_switch.set_state(state)
+        self.tema_switch.apply_styleSheet(state)
+        self.database_button.apply_styleSheet(state)
+        self.manual_button.apply_styleSheet(state)
+        self.about_button.apply_styleSheet(state)
+        self.aboutQt_button.apply_styleSheet(state)
 
-        self.paciente_card.apply_styleSheet(index)
-        self.paciente_add_button.apply_styleSheet(index)
-        self.paciente_edit_button.apply_styleSheet(index)
-        self.paciente_del_button.apply_styleSheet(index)
-        self.pacientes_menu.apply_styleSheet(index)
+        self.paciente_card.apply_styleSheet(state)
+        self.paciente_add_button.apply_styleSheet(state)
+        self.paciente_edit_button.apply_styleSheet(state)
+        self.paciente_del_button.apply_styleSheet(state)
+        self.pacientes_menu.apply_styleSheet(state)
 
-        self.analisis_card.apply_styleSheet(index)
-        self.analisis_add_button.apply_styleSheet(index)
-        self.analisis_del_button.apply_styleSheet(index)
-        self.analisis_menu.apply_styleSheet(index)
+        self.analisis_card.apply_styleSheet(state)
+        self.analisis_add_button.apply_styleSheet(state)
+        self.analisis_del_button.apply_styleSheet(state)
+        self.analisis_menu.apply_styleSheet(state)
 
-        self.info_card.apply_styleSheet(index)
-        self.apellido_value.apply_styleSheet(index)
-        self.nombre_value.apply_styleSheet(index)
-        self.id_label.apply_styleSheet(index)
-        self.id_label.set_icon('id', index)
-        self.id_value.apply_styleSheet(index)
-        self.fecha_label.apply_styleSheet(index)
-        self.fecha_label.set_icon('calendar', index)
-        self.fecha_value.apply_styleSheet(index)
-        self.sex_label.apply_styleSheet(index)
-        self.sex_value.apply_styleSheet(index)
+        self.info_card.apply_styleSheet(state)
+        self.apellido_value.apply_styleSheet(state)
+        self.nombre_value.apply_styleSheet(state)
+        self.id_label.apply_styleSheet(state)
+        self.id_label.set_icon('id', state)
+        self.id_value.apply_styleSheet(state)
+        self.fecha_label.apply_styleSheet(state)
+        self.fecha_label.set_icon('calendar', state)
+        self.fecha_value.apply_styleSheet(state)
+        self.sex_label.apply_styleSheet(state)
+        self.sex_value.apply_styleSheet(state)
         
-        if self.sex_value.text() == 'F': self.sex_label.set_icon('woman', index)
-        elif self.sex_value.text() == 'M': self.sex_label.set_icon('man', index)
+        if self.sex_value.text() == 'F': self.sex_label.set_icon('woman', state)
+        elif self.sex_value.text() == 'M': self.sex_label.set_icon('man', state)
 
-        self.peso_label.apply_styleSheet(index)
-        self.peso_label.set_icon('weight', index)
-        self.peso_value.apply_styleSheet(index)
-        self.altura_label.apply_styleSheet(index)
-        self.altura_label.set_icon('height', index)
-        self.altura_value.apply_styleSheet(index)
-        self.bmi_value.apply_styleSheet(index)
+        self.peso_label.apply_styleSheet(state)
+        self.peso_label.set_icon('weight', state)
+        self.peso_value.apply_styleSheet(state)
+        self.altura_label.apply_styleSheet(state)
+        self.altura_label.set_icon('height', state)
+        self.altura_value.apply_styleSheet(state)
+        self.bmi_value.apply_styleSheet(state)
 
-        self.lateral_plot_card.apply_styleSheet(index)
-        self.antePost_plot_card.apply_styleSheet(index)
-        self.elipse_plot_card.apply_styleSheet(index)
-        self.hull_plot_card.apply_styleSheet(index)
-        self.pca_plot_card.apply_styleSheet(index)
+        self.lateral_plot_card.apply_styleSheet(state)
+        self.antePost_plot_card.apply_styleSheet(state)
+        self.elipse_plot_card.apply_styleSheet(state)
+        self.hull_plot_card.apply_styleSheet(state)
+        self.pca_plot_card.apply_styleSheet(state)
 
-        self.lateral_plot.apply_styleSheet(index)
+        self.lateral_plot.apply_styleSheet(state)
         if self.lat_text_1:
             self.lat_text_1.remove()
             self.lat_text_2.remove()
-            if index:
+            if state:
                 self.lat_text_1 = self.lateral_plot.axes.text(self.data_lat_t_max, self.data_lat_max, f'{self.data_lat_max:.2f}', color='#000000')
                 self.lat_text_2 = self.lateral_plot.axes.text(self.data_lat_t_min, self.data_lat_min, f'{self.data_lat_min:.2f}', color='#000000')
             else:
                 self.lat_text_1 = self.lateral_plot.axes.text(self.data_lat_t_max, self.data_lat_max, f'{self.data_lat_max:.2f}', color='#E5E9F0')
                 self.lat_text_2 = self.lateral_plot.axes.text(self.data_lat_t_min, self.data_lat_min, f'{self.data_lat_min:.2f}', color='#E5E9F0')
         self.lateral_plot.draw()
-        self.antePost_plot.apply_styleSheet(index)
+        self.antePost_plot.apply_styleSheet(state)
         if self.ap_text_1:
             self.ap_text_1.remove()
             self.ap_text_2.remove()
-            if index:
+            if state:
                 self.ap_text_1 = self.antePost_plot.axes.text(self.data_ap_t_max, self.data_ap_max, f'{self.data_ap_max:.2f}', color='#000000')
                 self.ap_text_2 = self.antePost_plot.axes.text(self.data_ap_t_min, self.data_ap_min, f'{self.data_ap_min:.2f}', color='#000000')
             else:
                 self.ap_text_1 = self.antePost_plot.axes.text(self.data_ap_t_max, self.data_ap_max, f'{self.data_ap_max:.2f}', color='#E5E9F0')
                 self.ap_text_2 = self.antePost_plot.axes.text(self.data_ap_t_min, self.data_ap_min, f'{self.data_ap_min:.2f}', color='#E5E9F0')
         self.antePost_plot.draw()
-        self.elipse_plot.apply_styleSheet(index)
+        self.elipse_plot.apply_styleSheet(state)
         self.elipse_plot.draw()
-        self.hull_plot.apply_styleSheet(index)
+        self.hull_plot.apply_styleSheet(state)
         self.hull_plot.draw()
-        self.pca_plot.apply_styleSheet(index)
+        self.pca_plot.apply_styleSheet(state)
         self.pca_plot.draw()
 
-        self.lateral_card.apply_styleSheet(index)
-        self.lat_rango_label.apply_styleSheet(index)
-        self.lat_rango_value.apply_styleSheet(index)
-        self.lat_vel_label.apply_styleSheet(index)
-        self.lat_vel_value.apply_styleSheet(index)
-        self.lat_rms_label.apply_styleSheet(index)
-        self.lat_rms_value.apply_styleSheet(index)
+        self.lateral_card.apply_styleSheet(state)
+        self.lat_rango_label.apply_styleSheet(state)
+        self.lat_rango_value.apply_styleSheet(state)
+        self.lat_vel_label.apply_styleSheet(state)
+        self.lat_vel_value.apply_styleSheet(state)
+        self.lat_rms_label.apply_styleSheet(state)
+        self.lat_rms_value.apply_styleSheet(state)
 
-        self.antPost_card.apply_styleSheet(index)
-        self.ap_rango_label.apply_styleSheet(index)
-        self.ap_rango_value.apply_styleSheet(index)
-        self.ap_vel_label.apply_styleSheet(index)
-        self.ap_vel_value.apply_styleSheet(index)
-        self.ap_rms_label.apply_styleSheet(index)
-        self.ap_rms_value.apply_styleSheet(index)
+        self.antPost_card.apply_styleSheet(state)
+        self.ap_rango_label.apply_styleSheet(state)
+        self.ap_rango_value.apply_styleSheet(state)
+        self.ap_vel_label.apply_styleSheet(state)
+        self.ap_vel_value.apply_styleSheet(state)
+        self.ap_rms_label.apply_styleSheet(state)
+        self.ap_rms_value.apply_styleSheet(state)
 
-        self.centro_card.apply_styleSheet(index)
-        self.cop_vel_label.apply_styleSheet(index)
-        self.cop_vel_value.apply_styleSheet(index)
-        self.distancia_label.apply_styleSheet(index)
-        self.distancia_value.apply_styleSheet(index)
-        self.frecuencia_label.apply_styleSheet(index)
-        self.frecuencia_value.apply_styleSheet(index)
+        self.centro_card.apply_styleSheet(state)
+        self.cop_vel_label.apply_styleSheet(state)
+        self.cop_vel_value.apply_styleSheet(state)
+        self.distancia_label.apply_styleSheet(state)
+        self.distancia_value.apply_styleSheet(state)
+        self.frecuencia_label.apply_styleSheet(state)
+        self.frecuencia_value.apply_styleSheet(state)
 
-        self.areas_card.apply_styleSheet(index)
-        self.elipse_label.apply_styleSheet(index)
-        self.elipse_value.apply_styleSheet(index)
-        self.hull_label.apply_styleSheet(index)
-        self.hull_value.apply_styleSheet(index)
-        self.pca_label.apply_styleSheet(index)
-        self.pca_value.apply_styleSheet(index)
+        self.areas_card.apply_styleSheet(state)
+        self.elipse_label.apply_styleSheet(state)
+        self.elipse_value.apply_styleSheet(state)
+        self.hull_label.apply_styleSheet(state)
+        self.hull_value.apply_styleSheet(state)
+        self.pca_label.apply_styleSheet(state)
+        self.pca_value.apply_styleSheet(state)
 
-        self.settings.setValue('theme', f'{index}')
+        self.settings.setValue('theme', f'{state}')
         self.theme_value = eval(self.settings.value('theme'))
 
 
