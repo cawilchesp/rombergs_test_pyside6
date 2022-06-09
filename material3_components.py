@@ -831,7 +831,84 @@ class DateField(QtWidgets.QFrame):
         elif language == 1: self.label_field.setText(self.label_en)
         self.label_field.adjustSize()
 
+# ----
+# Menú
+# ----
+class Menu(QtWidgets.QComboBox):
+    def __init__(self, parent, name: str, geometry: tuple, max_items: int, max_count: int, options_dict: dict, theme: bool, language: int) -> None:
+        """ Material Design 3 Component: Menu
 
+        Parameters
+        ----------
+        name: str
+            Widget name
+        geometry: tuple
+            Menu position and width
+            (x, y, w) -> x, y: upper left corner, w: width
+        max_items: int
+            Max visible items in the menu
+        max_count: int
+            Total Items in the menu
+        options_dict: dict
+            Menu options with translations
+            Format: {0: ('es_1', 'en_1'), 1: ('es_2', 'en_2')}
+        theme: bool
+            App theme
+            True: Light theme, False: Dark theme
+        language: int
+            App language
+            0: Spanish, 1: English
+        
+        Returns
+        -------
+        None
+        """
+        super(Menu, self).__init__(parent)
+
+        self.name = name
+        x, y, w = geometry
+        self.options_dict = options_dict
+
+        self.setObjectName(self.name)
+        self.setGeometry(x, y, w, 32)
+        self.setMaxVisibleItems(max_items)
+        self.setMaxCount(max_count)
+        self.setSizeAdjustPolicy(QtWidgets.QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon)
+        self.setCurrentIndex(-1)
+        self.view().window().setWindowFlags(Qt.WindowType.Popup | Qt.WindowType.FramelessWindowHint | Qt.WindowType.NoDropShadowWindowHint)
+        self.view().window().setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        
+        self.apply_styleSheet(theme)
+        self.language_text(language)
+
+    def apply_styleSheet(self, theme: bool) -> None:
+        """ Apply theme style sheet to component """
+        if theme:
+            background_color = light["surface"]
+            color = light["on_surface"]
+            border_color = light["background"]
+            disable_color = light["disable"]
+        else:
+            background_color = dark["surface"]
+            color = dark["on_surface"]
+            border_color = dark["background"]
+            disable_color = dark["disable"]
+        list_combobox_style = (f'QComboBox#{self.name} {{ border: 1px solid {color};'
+                f'border-radius: 4; background-color: {background_color}; color: {color} }}'
+                f'QComboBox#{self.name}::drop-down {{ border-color: {border_color} }}'
+                f'QComboBox#{self.name}::down-arrow {{ width: 16; height: 16;'
+                f'image: url({images_path}/triangle_down_D.png) }}'
+                f'QComboBox#{self.name}:!Enabled {{ background-color: {disable_color} }}'
+                f'QComboBox#{self.name} QListView {{ border: 1px solid {color}; border-radius: 4;'
+                f'background-color: {background_color}; color: {color} }}')
+        self.setStyleSheet(list_combobox_style)
+
+    def language_text(self, language: int) -> None:
+        """ Change language of label text  """
+        for key, value in self.options_dict.items():
+            self.addItem('')
+            if language == 0:   self.setItemText(key, value[0])
+            elif language == 1: self.setItemText(key, value[1])
 
 
 
