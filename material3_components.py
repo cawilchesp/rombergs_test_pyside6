@@ -95,7 +95,7 @@ class Card(QtWidgets.QFrame):
                 f'QLabel {{ background-color: {background_color}; color: {color} }}')
 
     def language_text(self, language: int) -> None:
-        """ Change language of title text  """
+        """ Change language of title text """
         if language == 0:   self.title.setText(self.label_es)
         elif language == 1: self.title.setText(self.label_en)
 
@@ -152,7 +152,7 @@ class ItemLabel(QtWidgets.QLabel):
                 f'color: {color} }}')
 
     def language_text(self, language: int) -> None:
-        """ Change language of label text  """
+        """ Change language of label text """
         if language == 0:   self.setText(self.label_es)
         elif language == 1: self.setText(self.label_en)
 
@@ -340,7 +340,7 @@ class FieldLabel(QtWidgets.QLabel):
                 f'color: {color} }}')
 
     def language_text(self, language: int) -> None:
-        """ Change language of label text  """
+        """ Change language of label text """
         if language == 0:   self.setText(self.label_es)
         elif language == 1: self.setText(self.label_en)
         self.adjustSize()
@@ -363,7 +363,7 @@ class TextButton(QtWidgets.QToolButton):
             Text button text
             (label_es, label_en) -> label_es: label in spanish, label_en: label in english
         icon: str
-            Icon file with extension. If is not necessary, leave empty ('').
+            Icon file with extension. If is not necessary, use an empty string: ''.
         theme: bool
             App theme
             True: Light theme, False: Dark theme
@@ -409,7 +409,7 @@ class TextButton(QtWidgets.QToolButton):
                 f'color: {hover_color} }}')
 
     def language_text(self, language: int) -> None:
-        """ Change language of button text  """
+        """ Change language of button text """
         if language == 0:   self.setText(self.label_es)
         elif language == 1: self.setText(self.label_en)
 
@@ -505,7 +505,7 @@ class SegmentedButton(QtWidgets.QToolButton):
                 f'color: {checked_color} }}')
 
     def language_text(self, language: int) -> None:
-        """ Change language of button text  """
+        """ Change language of button text """
         if language == 0:   self.setText(self.label_es)
         elif language == 1: self.setText(self.label_en)
 
@@ -578,7 +578,7 @@ class ColorButton(QtWidgets.QToolButton):
             Widget name
         geometry: tuple
             Color button position
-            (x, y) -> x, y: upper left corner
+            (x, y,) -> x, y: upper left corner
         color: str
             Color string
             Format: 'R, G, B'
@@ -691,7 +691,7 @@ class Switch(QtWidgets.QToolButton):
                 f'color: {checked_color} }}')
 
     def language_text(self, language: int) -> None:
-        """ Change language of switch text  """
+        """ Change language of switch text """
         if language == 0:   self.setText(self.label_es)
         elif language == 1: self.setText(self.label_en)
 
@@ -753,7 +753,7 @@ class TextField(QtWidgets.QFrame):
                 f'background-color: {background_color}; color: {color} }}')
 
     def language_text(self, language: int) -> None:
-        """ Change language of label text  """
+        """ Change language of label text """
         if language == 0:   self.label_field.setText(self.label_es)
         elif language == 1: self.label_field.setText(self.label_en)
         self.label_field.adjustSize()
@@ -826,7 +826,7 @@ class DateField(QtWidgets.QFrame):
                 f'width: 16; height: 16 }}')
 
     def language_text(self, language: int) -> None:
-        """ Change language of label text  """
+        """ Change language of label text """
         if language == 0:   self.label_field.setText(self.label_es)
         elif language == 1: self.label_field.setText(self.label_en)
         self.label_field.adjustSize()
@@ -904,7 +904,7 @@ class Menu(QtWidgets.QComboBox):
         self.setStyleSheet(list_combobox_style)
 
     def language_text(self, language: int) -> None:
-        """ Change language of label text  """
+        """ Change language of label text """
         for key, value in self.options_dict.items():
             self.addItem('')
             if language == 0:   self.setItemText(key, value[0])
