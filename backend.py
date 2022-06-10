@@ -353,19 +353,6 @@ def ellipsePCA(df: pd.DataFrame) -> dict:
 
     return results
 
-# -------------
-# Base de Datos
-# -------------
-# --------
-# Settings
-# --------
-settings = QSettings(f'{sys.path[0]}/settings.ini', QSettings.Format.IniFormat)
-db_host = settings.value('db_host')
-db_port = settings.value('db_port')
-db_name = settings.value('db_name')
-db_user = settings.value('db_user')
-db_password = settings.value('db_password')
-
 # ---------
 # Funciones
 # ---------
@@ -382,11 +369,21 @@ def create_db(db_table: str) -> list:
     table_data: list
         Data of table if exists (empty if table don't exist)
     """
-    connection = psycopg2.connect(user=db_user, 
+    settings = QSettings(f'{sys.path[0]}/settings.ini', QSettings.Format.IniFormat)
+    db_host = settings.value('db_host')
+    db_port = settings.value('db_port')
+    db_name = settings.value('db_name')
+    db_user = settings.value('db_user')
+    db_password = settings.value('db_password')
+    try:
+        connection = psycopg2.connect(user=db_user, 
                                   password=db_password, 
                                   host=db_host, 
                                   port=db_port, 
                                   database=db_name)
+    except psycopg2.OperationalError as err:
+        return err
+
     cursor = connection.cursor()
 
     if db_table == 'pacientes':
@@ -456,6 +453,12 @@ def add_db(db_table: str, data: dict) -> list:
         file_name_value = data['file_name']
         file_path_value = data['file_path']
 
+    settings = QSettings(f'{sys.path[0]}/settings.ini', QSettings.Format.IniFormat)
+    db_host = settings.value('db_host')
+    db_port = settings.value('db_port')
+    db_name = settings.value('db_name')
+    db_user = settings.value('db_user')
+    db_password = settings.value('db_password')
     connection = psycopg2.connect(user=db_user, 
                                   password=db_password, 
                                   host=db_host, 
@@ -502,6 +505,12 @@ def get_db(db_table: str, data_id: str) -> list:
     table_data: list
         Data of table
     """
+    settings = QSettings(f'{sys.path[0]}/settings.ini', QSettings.Format.IniFormat)
+    db_host = settings.value('db_host')
+    db_port = settings.value('db_port')
+    db_name = settings.value('db_name')
+    db_user = settings.value('db_user')
+    db_password = settings.value('db_password')
     connection = psycopg2.connect(user=db_user, 
                                   password=db_password, 
                                   host=db_host, 
@@ -554,6 +563,12 @@ def edit_db(db_table: str, id_db: int, data: dict) -> list:
         file_name_value = data['file_name']
         file_path_value = data['file_path']
 
+    settings = QSettings(f'{sys.path[0]}/settings.ini', QSettings.Format.IniFormat)
+    db_host = settings.value('db_host')
+    db_port = settings.value('db_port')
+    db_name = settings.value('db_name')
+    db_user = settings.value('db_user')
+    db_password = settings.value('db_password')
     connection = psycopg2.connect(user=db_user, 
                                   password=db_password, 
                                   host=db_host, 
@@ -605,6 +620,12 @@ def delete_db(db_table: str, data: str) -> list:
     table_data: list
         Data of table updated
     """
+    settings = QSettings(f'{sys.path[0]}/settings.ini', QSettings.Format.IniFormat)
+    db_host = settings.value('db_host')
+    db_port = settings.value('db_port')
+    db_name = settings.value('db_name')
+    db_user = settings.value('db_user')
+    db_password = settings.value('db_password')
     connection = psycopg2.connect(user=db_user, 
                                   password=db_password, 
                                   host=db_host, 
