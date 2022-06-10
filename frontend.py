@@ -30,13 +30,7 @@ class App(QWidget):
         self.theme_value = eval(self.settings.value('theme'))
 
         self.idioma_dict = {0: ('ESP', 'SPA'), 1: ('ING', 'ENG')}
-
-        # -------------
-        # Base de Datos
-        # -------------
-        self.patientes_list = backend.create_db('pacientes')
-        self.estudios_list = backend.create_db('estudios')
-
+    
         # ---------
         # Variables
         # ---------
@@ -123,9 +117,6 @@ class App(QWidget):
         y_1 = 48
         self.pacientes_menu = mt3.Menu(self.paciente_card, 'pacientes_menu',
             (8, y_1, 164), 10, 10, {}, self.theme_value, self.language_value)
-        for data in self.patientes_list:
-            self.pacientes_menu.addItem(data[4])
-        self.pacientes_menu.setCurrentIndex(-1)
         self.pacientes_menu.textActivated.connect(self.on_pacientes_menu_textActivated)
 
         y_1 += 40
@@ -356,7 +347,28 @@ class App(QWidget):
         self.pca_value = mt3.ValueLabel(self.areas_card, 'pca_value',
             (8, y_7, 192), self.theme_value)
 
-# ----------------
+        # -------------
+        # Base de Datos
+        # -------------
+        try:
+            self.patientes_list = backend.create_db('pacientes')
+            self.estudios_list = backend.create_db('estudios')
+
+            for data in self.patientes_list:
+                self.pacientes_menu.addItem(data[4])
+            self.pacientes_menu.setCurrentIndex(-1)
+        except:
+            self.pacientes_menu.setEnabled(False)
+            self.paciente_add_button.setEnabled(False)
+            self.paciente_edit_button.setEnabled(False)
+            self.paciente_del_button.setEnabled(False)
+            
+            if self.language_value == 0:
+                QtWidgets.QMessageBox.critical(self, 'Error de Base de Datos', 'La base de datos no está configurada')
+            elif self.language_value == 1:
+                QtWidgets.QMessageBox.critical(self, 'Database Error', 'Database not configured')
+
+    # ----------------
     # Funciones Título
     # ----------------
     def on_idioma_menu_currentIndexChanged(self, index: int) -> None:
@@ -540,8 +552,20 @@ class App(QWidget):
         """ Database button to configure the database """
         self.db_info = database.Database()
         self.db_info.exec()
-
+        
         if self.db_info.database_data:
+            self.patientes_list = backend.create_db('pacientes')
+            self.estudios_list = backend.create_db('estudios')
+
+            for data in self.patientes_list:
+                self.pacientes_menu.addItem(data[4])
+            self.pacientes_menu.setCurrentIndex(-1)
+
+            self.pacientes_menu.setEnabled(True)
+            self.paciente_add_button.setEnabled(True)
+            self.paciente_edit_button.setEnabled(True)
+            self.paciente_del_button.setEnabled(True)
+
             if self.language_value == 0:
                 QtWidgets.QMessageBox.information(self, 'Datos Guardados', 'Base de datos configurada')
             elif self.language_value == 1:
