@@ -121,6 +121,8 @@ class Database(QtWidgets.QDialog):
             self.settings.setValue('db_user', self.user_text.text_field.text())
             self.settings.setValue('db_password', self.password_text.text_field.text())
 
+            self.settings.sync()
+
             self.close()
 
     def on_cancelar_button_clicked(self):
