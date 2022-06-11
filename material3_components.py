@@ -747,7 +747,8 @@ class TextField(QtWidgets.QFrame):
         else:
             background_color = dark["surface"]
             color = dark["on_surface"]
-        self.setStyleSheet(f'QLineEdit {{ border: 1px solid {color}; border-radius: 4;'
+        self.setStyleSheet(f'QFrame {{ background-color: {background_color} }}'
+                f'QLineEdit {{ border: 1px solid {color}; border-radius: 4;'
                 f'padding: 0 8 0 8; background-color: {background_color}; color: {color}; }}'
                 f'QLabel {{ border: 0px solid; padding: 0 4 0 4;'
                 f'background-color: {background_color}; color: {color} }}')
