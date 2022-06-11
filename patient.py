@@ -191,7 +191,7 @@ class Patient(QtWidgets.QDialog):
     # ---------
     # Funciones
     # ---------
-    def on_cc_button_clicked(self):
+    def on_cc_button_clicked(self) -> None:
         """ Id type option for segmented buttons """
         self.cc_button.set_state(True)
         
@@ -199,7 +199,7 @@ class Patient(QtWidgets.QDialog):
             self.ti_button.set_state(False)
 
 
-    def on_ti_button_clicked(self):
+    def on_ti_button_clicked(self) -> None:
         """ Id type option for segmented buttons """
         self.ti_button.set_state(True)
         
@@ -207,7 +207,7 @@ class Patient(QtWidgets.QDialog):
             self.cc_button.set_state(False)
 
 
-    def on_f_button_clicked(self):
+    def on_f_button_clicked(self) -> None:
         """ Sex option for segmented buttons """
         self.f_button.set_state(True)
         
@@ -215,7 +215,7 @@ class Patient(QtWidgets.QDialog):
             self.m_button.set_state(False)
 
 
-    def on_m_button_clicked(self):
+    def on_m_button_clicked(self) -> None:
         """ Sex option for segmented buttons """
         self.m_button.set_state(True)
         
@@ -223,7 +223,7 @@ class Patient(QtWidgets.QDialog):
             self.f_button.set_state(False)
 
 
-    def on_kg_button_clicked(self):
+    def on_kg_button_clicked(self) -> None:
         """ Weight unit option for segmented buttons """
         self.kg_button.set_state(True)
         
@@ -244,7 +244,7 @@ class Patient(QtWidgets.QDialog):
                 self.bmi_value_label.setText(f'{bmi_value:.1f}')
 
 
-    def on_lb_button_clicked(self):
+    def on_lb_button_clicked(self) -> None:
         """ Weight unit option for segmented buttons """
         self.lb_button.set_state(True)
         
@@ -265,7 +265,7 @@ class Patient(QtWidgets.QDialog):
                 self.bmi_value_label.setText(f'{bmi_value:.1f}')
 
 
-    def on_mt_button_clicked(self):
+    def on_mt_button_clicked(self) -> None:
         """ Height unit option for segmented buttons """
         self.mt_button.set_state(True)
         
@@ -284,7 +284,7 @@ class Patient(QtWidgets.QDialog):
                 self.bmi_value_label.setText(f'{bmi_value:.1f}')
 
 
-    def on_fi_button_clicked(self):
+    def on_fi_button_clicked(self) -> None:
         """ Height unit option for segmented buttons """
         self.fi_button.set_state(True)
         
@@ -307,7 +307,7 @@ class Patient(QtWidgets.QDialog):
                 self.bmi_value_label.setText(f'{bmi_value:.1f}')
 
 
-    def on_peso_text_textEdited(self):
+    def on_peso_text_textEdited(self) -> None:
         """ Weight value to calculate BMI """
         if self.peso_text.text_field.text() != '' and self.altura_text.text_field.text() != '':
             bmi_value = 0.0
@@ -333,7 +333,7 @@ class Patient(QtWidgets.QDialog):
             self.bmi_value_label.setText(f'{bmi_value:.1f}')
 
 
-    def on_altura_text_textEdited(self):
+    def on_altura_text_textEdited(self) -> None:
         """ Height value to calculate BMI """
         if self.peso_text.text_field.text() != '' and self.altura_text.text_field.text() != '':
             bmi_value = 0.0
@@ -359,7 +359,7 @@ class Patient(QtWidgets.QDialog):
             self.bmi_value_label.setText(f'{bmi_value:.1f}')
 
 
-    def on_aceptar_button_clicked(self):
+    def on_aceptar_button_clicked(self) -> None:
         """ Checking and saving form values """
         if (self.apellido_text.text_field.text() == '' or self.nombre_text.text_field.text() == '' or 
                 (not self.cc_button.isChecked() and not self.ti_button.isChecked()) or
@@ -402,6 +402,6 @@ class Patient(QtWidgets.QDialog):
             self.close()
 
 
-    def on_cancelar_button_clicked(self):
+    def on_cancelar_button_clicked(self) -> None:
         """ Close dialog window without saving """
         self.close()
