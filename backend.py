@@ -391,20 +391,20 @@ def create_db(db_table: str) -> list:
                         id serial PRIMARY KEY,
                         last_name VARCHAR(128) NOT NULL,
                         first_name VARCHAR(128) NOT NULL,
-                        id_type VARCHAR(128) NOT NULL,
-                        id_number VARCHAR(15) UNIQUE NOT NULL,
+                        id_type CHAR(2) NOT NULL,
+                        id_number BIGINT UNIQUE NOT NULL,
                         birth_date VARCHAR(128) NOT NULL,
-                        sex VARCHAR(128) NOT NULL,
-                        weight VARCHAR(10) NOT NULL,
-                        weight_unit VARCHAR(10) NOT NULL,
-                        height VARCHAR(10) NOT NULL,
-                        height_unit VARCHAR(10) NOT NULL,
-                        bmi VARCHAR(10) NOT NULL
+                        sex CHAR(1) NOT NULL,
+                        weight NUMERIC(5,2) NOT NULL,
+                        weight_unit CHAR(2) NOT NULL,
+                        height NUMERIC(3,2) NOT NULL,
+                        height_unit VARCHAR(7) NOT NULL,
+                        bmi NUMERIC(4,2) NOT NULL
                         )""")
     elif db_table == 'estudios':
         cursor.execute("""CREATE TABLE IF NOT EXISTS estudios (
                         id serial PRIMARY KEY,
-                        id_number VARCHAR(15) NOT NULL,
+                        id_number BIGINT NOT NULL,
                         file_name VARCHAR(128) UNIQUE NOT NULL,
                         file_path VARCHAR(128) UNIQUE NOT NULL
                         )""")
