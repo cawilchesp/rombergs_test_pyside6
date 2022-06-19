@@ -355,7 +355,7 @@ class App(QWidget):
             self.estudios_list = backend.create_db('estudios')
 
             for data in self.patientes_list:
-                self.pacientes_menu.addItem(data[4])
+                self.pacientes_menu.addItem(str(data[4]))
             self.pacientes_menu.setCurrentIndex(-1)
         except:
             self.pacientes_menu.setEnabled(False)
@@ -558,7 +558,7 @@ class App(QWidget):
             self.estudios_list = backend.create_db('estudios')
 
             for data in self.patientes_list:
-                self.pacientes_menu.addItem(data[4])
+                self.pacientes_menu.addItem(str(data[4]))
             self.pacientes_menu.setCurrentIndex(-1)
 
             self.pacientes_menu.setEnabled(True)
@@ -664,7 +664,7 @@ class App(QWidget):
             
             self.pacientes_menu.clear()
             for data in self.patientes_list:
-                self.pacientes_menu.addItem(data[4])
+                self.pacientes_menu.addItem(str(data[4]))
             self.pacientes_menu.setCurrentIndex(len(self.patientes_list)-1)
 
             self.analisis_add_button.setEnabled(True)
@@ -694,26 +694,26 @@ class App(QWidget):
             self.patient_window.apellido_text.text_field.setText(patient_data[0][1])
             self.patient_window.nombre_text.text_field.setText(patient_data[0][2])
             if patient_data[0][3] == 'CC':
-                self.patient_window.cc_button.setChecked(True)
+                self.patient_window.cc_button.set_state(True)
             elif patient_data[0][3] == 'TI':
-                self.patient_window.ti_button.setChecked(True)
-            self.patient_window.id_text.text_field.setText(patient_data[0][4])
+                self.patient_window.ti_button.set_state(True)
+            self.patient_window.id_text.text_field.setText(str(patient_data[0][4]))
             self.patient_window.fecha_date.text_field.setDate(QtCore.QDate.fromString(patient_data[0][5], 'dd/MM/yyyy'))
             if patient_data[0][6] == 'F':
-                self.patient_window.f_button.setChecked(True)
+                self.patient_window.f_button.set_state(True)
             elif patient_data[0][6] == 'M':
-                self.patient_window.m_button.setChecked(True)
-            self.patient_window.peso_text.text_field.setText(patient_data[0][7])
+                self.patient_window.m_button.set_state(True)
+            self.patient_window.peso_text.text_field.setText(str(patient_data[0][7]))
             if patient_data[0][8] == 'Kg':
-                self.patient_window.kg_button.setChecked(True)
+                self.patient_window.kg_button.set_state(True)
             elif patient_data[0][8] == 'Lb':
-                self.patient_window.lb_button.setChecked(True)
-            self.patient_window.altura_text.text_field.setText(patient_data[0][9])
+                self.patient_window.lb_button.set_state(True)
+            self.patient_window.altura_text.text_field.setText(str(patient_data[0][9]))
             if patient_data[0][10] == 'm':
-                self.patient_window.mt_button.setChecked(True)
+                self.patient_window.mt_button.set_state(True)
             elif patient_data[0][10] == 'ft - in':
-                self.patient_window.fi_button.setChecked(True)
-            self.patient_window.bmi_value_label.setText(patient_data[0][11])
+                self.patient_window.fi_button.set_state(True)
+            self.patient_window.bmi_value_label.setText(str(patient_data[0][11]))
 
             self.patient_window.exec()
 
@@ -722,7 +722,7 @@ class App(QWidget):
 
                 self.pacientes_menu.clear()
                 for data in self.patientes_list:
-                    self.pacientes_menu.addItem(data[4])
+                    self.pacientes_menu.addItem(str(data[4]))
                 self.pacientes_menu.setCurrentIndex(-1)
 
                 self.analisis_add_button.setEnabled(False)
@@ -764,7 +764,7 @@ class App(QWidget):
 
             self.pacientes_menu.clear()
             for data in self.patientes_list:
-                self.pacientes_menu.addItem(data[4])
+                self.pacientes_menu.addItem(str(data[4]))
             self.pacientes_menu.setCurrentIndex(-1)
 
             self.analisis_add_button.setEnabled(False)
@@ -818,7 +818,7 @@ class App(QWidget):
         self.sex_value.setText(patient_data[0][6])
         self.peso_value.setText(f'{patient_data[0][7]} {patient_data[0][8]}')
         self.altura_value.setText(f'{patient_data[0][9]} {patient_data[0][10]}')
-        self.bmi_value.setText(patient_data[0][11])
+        self.bmi_value.setText(str(patient_data[0][11]))
 
         self.analisis_add_button.setEnabled(True)
         self.analisis_del_button.setEnabled(True)
@@ -827,7 +827,7 @@ class App(QWidget):
         self.estudios_list = backend.get_db('estudios', current_pacient)
         self.analisis_menu.clear()
         for data in self.estudios_list:
-            self.analisis_menu.addItem(data[2])
+            self.analisis_menu.addItem(str(data[2]))
         self.analisis_menu.setCurrentIndex(-1)
 
         self.lateral_plot.axes.cla()
@@ -970,7 +970,7 @@ class App(QWidget):
             
             self.analisis_menu.clear()
             for data in self.estudios_list:
-                self.analisis_menu.addItem(data[2])
+                self.analisis_menu.addItem(str(data[2]))
             self.analisis_menu.setCurrentIndex(len(self.patientes_list)-1)
 
             if self.language_value == 0:
@@ -993,7 +993,7 @@ class App(QWidget):
             
             self.analisis_menu.clear()
             for data in self.estudios_list:
-                self.analisis_menu.addItem(data[2])
+                self.analisis_menu.addItem(str(data[2]))
             self.analisis_menu.setCurrentIndex(-1)
 
             self.lateral_plot.axes.cla()
