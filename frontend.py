@@ -28,6 +28,7 @@ class App(QWidget):
         self.settings = QSettings(f'{sys.path[0]}/settings.ini', QSettings.Format.IniFormat)
         self.language_value = int(self.settings.value('language'))
         self.theme_value = eval(self.settings.value('theme'))
+        self.default_path = self.settings.value('default_path')
 
         self.idioma_dict = {0: ('ESP', 'SPA'), 1: ('ING', 'ENG')}
     
@@ -861,10 +862,12 @@ class App(QWidget):
     def on_analisis_add_button_clicked(self) -> None:
         """ Add analysis button to the database """
         selected_file = QtWidgets.QFileDialog.getOpenFileName(None,
-                'Seleccione el archivo de datos', 'D:/Data/Asdhar Alonso/',
+                'Seleccione el archivo de datos', self.default_path,
                 'Archivos de Datos (*.csv *.txt *.emt)')[0]
 
         if selected_file:
+            self.default_path = self.settings.setValue('default_path', str(Path(selected_file).parent))
+
             df = pd.read_csv(selected_file, sep='\t', skiprows=43, encoding='ISO-8859-1')
 
             results = backend.analisis(df)
