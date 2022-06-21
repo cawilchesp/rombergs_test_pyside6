@@ -134,7 +134,7 @@ class ItemLabel(QtWidgets.QLabel):
         x, y = geometry
 
         self.setObjectName(self.name)
-        self.setGeometry(x, y, parent.geometry().width()-16, 20)
+        self.setGeometry(x, y, parent.geometry().width()-16, 16)
         self.setFont(QtGui.QFont('Segoe UI', 9, QtGui.QFont.Weight.Bold))
         
         self.apply_styleSheet(theme)
