@@ -246,21 +246,21 @@ class App(QWidget):
         y_4 = 48
         self.lat_rango_label = mt3.ItemLabel(self.lateral_card, 'lat_rango_label',
             (8, y_4), ('Rango (mm)', 'Range (mm)'), self.theme_value, self.language_value)
-        y_4 += 20
+        y_4 += 16
         self.lat_rango_value = mt3.ValueLabel(self.lateral_card, 'lat_rango_value',
             (8, y_4, 192), self.theme_value)
 
         y_4 += 40
         self.lat_vel_label = mt3.ItemLabel(self.lateral_card, 'lat_vel_label',
             (8, y_4), ('Velocidad Media (mm/s)', 'Mean Velocity (mm/s)'), self.theme_value, self.language_value)
-        y_4 += 20
+        y_4 += 16
         self.lat_vel_value = mt3.ValueLabel(self.lateral_card, 'lat_vel_value',
             (8, y_4, 192), self.theme_value)
 
         y_4 += 40
         self.lat_rms_label = mt3.ItemLabel(self.lateral_card, 'lat_rms_label',
             (8, y_4), ('RMS (mm)', 'RMS (mm)'), self.theme_value, self.language_value)
-        y_4 += 20
+        y_4 += 16
         self.lat_rms_value = mt3.ValueLabel(self.lateral_card, 'lat_rms_value',
             (8, y_4, 192), self.theme_value)
 
@@ -274,21 +274,21 @@ class App(QWidget):
         y_5 = 48
         self.ap_rango_label = mt3.ItemLabel(self.antPost_card, 'ap_rango_label',
             (8, y_5), ('Rango (mm)', 'Range (mm)'), self.theme_value, self.language_value)
-        y_5 += 20
+        y_5 += 16
         self.ap_rango_value = mt3.ValueLabel(self.antPost_card, 'ap_rango_value',
             (8, y_5, 192), self.theme_value)
 
         y_5 += 40
         self.ap_vel_label = mt3.ItemLabel(self.antPost_card, 'ap_vel_label',
             (8, y_5), ('Velocidad Media (mm/s)', 'Mean Velocity (mm/s)'), self.theme_value, self.language_value)
-        y_5 += 20
+        y_5 += 16
         self.ap_vel_value = mt3.ValueLabel(self.antPost_card, 'ap_vel_value',
             (8, y_5, 192), self.theme_value)
 
         y_5 += 40
         self.ap_rms_label = mt3.ItemLabel(self.antPost_card, 'ap_rms_label',
             (8, y_5), ('RMS (mm)', 'RMS (mm)'), self.theme_value, self.language_value)
-        y_5 += 20
+        y_5 += 16
         self.ap_rms_value = mt3.ValueLabel(self.antPost_card, 'ap_rms_value',
             (8, y_5, 192), self.theme_value)
 
@@ -302,21 +302,21 @@ class App(QWidget):
         y_6 = 48
         self.cop_vel_label = mt3.ItemLabel(self.centro_card, 'cop_vel_label',
             (8, y_6), ('Velocidad Media (mm/s)', 'Mean Velocity (mm/s)'), self.theme_value, self.language_value)
-        y_6 += 20
+        y_6 += 16
         self.cop_vel_value = mt3.ValueLabel(self.centro_card, 'cop_vel_value',
             (8, y_6, 192), self.theme_value)
 
         y_6 += 40
         self.distancia_label = mt3.ItemLabel(self.centro_card, 'distancia_label',
             (8, y_6), ('Distancia Media (mm)', 'Mean Distance (mm)'), self.theme_value, self.language_value)
-        y_6 += 20
+        y_6 += 16
         self.distancia_value = mt3.ValueLabel(self.centro_card, 'distancia_value',
             (8, y_6, 192), self.theme_value)
 
         y_6 += 40
         self.frecuencia_label = mt3.ItemLabel(self.centro_card, 'frecuencia_label',
             (8, y_6), ('Frecuencia Media (Hz)', 'Mean Frequency (Hz)'), self.theme_value, self.language_value)
-        y_6 += 20
+        y_6 += 16
         self.frecuencia_value = mt3.ValueLabel(self.centro_card, 'frecuencia_value',
             (8, y_6, 192), self.theme_value)
 
@@ -330,21 +330,21 @@ class App(QWidget):
         y_7 = 48
         self.elipse_label = mt3.ItemLabel(self.areas_card, 'elipse_label',
             (8, y_7), ('Área de la Elipse (mm²)', 'Ellipse Area (mm²)'), self.theme_value, self.language_value)
-        y_7 += 20
+        y_7 += 16
         self.elipse_value = mt3.ValueLabel(self.areas_card, 'elipse_value',
             (8, y_7, 192), self.theme_value)
 
         y_7 += 40
         self.hull_label = mt3.ItemLabel(self.areas_card, 'hull_label',
             (8, y_7), ('Área del Envolvente (mm²)', 'Hull Area (mm²)'), self.theme_value, self.language_value)
-        y_7 += 20
+        y_7 += 16
         self.hull_value = mt3.ValueLabel(self.areas_card, 'hull_value',
             (8, y_7, 192), self.theme_value)
         
         y_7 += 40
         self.pca_label = mt3.ItemLabel(self.areas_card, 'pca_label',
             (8, y_7), ('Área de la Elipse Orientada (mm²)', 'Oriented Ellipse Area (mm²)'), self.theme_value, self.language_value)
-        y_7 += 20
+        y_7 += 16
         self.pca_value = mt3.ValueLabel(self.areas_card, 'pca_value',
             (8, y_7, 192), self.theme_value)
 
@@ -628,10 +628,10 @@ class App(QWidget):
         self.pca_plot_card.title.resize(self.pca_plot_card.width() - 16, 32)
         self.pca_plot.setGeometry(8, 48, self.pca_plot_card.width()-16, self.pca_plot_card.height() - 56)
         
-        self.lateral_card.setGeometry(width - 432, 64, 208, 228)
-        self.antPost_card.setGeometry(width - 216, 64, 208, 228)
-        self.centro_card.setGeometry(width - 432, 300, 208, 228)
-        self.areas_card.setGeometry(width - 216, 300, 208, 228)
+        self.lateral_card.setGeometry(width - 432, 64, 208, 216)
+        self.antPost_card.setGeometry(width - 216, 64, 208, 216)
+        self.centro_card.setGeometry(width - 432, 288, 208, 216)
+        self.areas_card.setGeometry(width - 216, 288, 208, 216)
 
         return super().resizeEvent(a0)
 
